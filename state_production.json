@@ -1,0 +1,1506 @@
+{
+  "chicken": [
+    {
+      "year": "2020",
+      "state": "ALABAMA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "6,605,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "DELAWARE",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,928,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "8,083,100,000"
+    },
+    {
+      "year": "2020",
+      "state": "MARYLAND",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,867,500,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSISSIPPI",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "4,612,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "7,882,700,000"
+    },
+    {
+      "year": "2020",
+      "state": "OKLAHOMA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,494,300,000"
+    },
+    {
+      "year": "2020",
+      "state": "PENNSYLVANIA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,260,300,000"
+    },
+    {
+      "year": "2020",
+      "state": "TENNESSEE",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,030,700,000"
+    },
+    {
+      "year": "2020",
+      "state": "VIRGINIA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,712,400,000"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "225,500,000"
+    },
+    {
+      "year": "2020",
+      "state": "ARKANSAS",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "7,347,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "391,200,000"
+    },
+    {
+      "year": "2020",
+      "state": "KENTUCKY",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,943,500,000"
+    },
+    {
+      "year": "2020",
+      "state": "MINNESOTA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "358,400,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSOURI",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,489,700,000"
+    },
+    {
+      "year": "2020",
+      "state": "OHIO",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "551,800,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "3,834,500,000"
+    },
+    {
+      "year": "2020",
+      "state": "SOUTH CAROLINA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "1,875,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "TEXAS",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "4,636,500,000"
+    },
+    {
+      "year": "2020",
+      "state": "WEST VIRGINIA",
+      "category": "CHICKENS",
+      "data_item_unit": "CHICKENS, BROILERS - PRODUCTION, MEASURED IN LB",
+      "value": "273,800,000"
+    }
+  ],
+  "turkey": [
+    {
+      "year": "2020",
+      "state": "ARKANSAS",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "595,200,000"
+    },
+    {
+      "year": "2020",
+      "state": "INDIANA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "814,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "232,440,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSOURI",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "581,400,000"
+    },
+    {
+      "year": "2020",
+      "state": "OHIO",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "271,200,000"
+    },
+    {
+      "year": "2020",
+      "state": "PENNSYLVANIA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "190,950,000"
+    },
+    {
+      "year": "2020",
+      "state": "VIRGINIA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "446,400,000"
+    },
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "232,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "IOWA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "505,440,000"
+    },
+    {
+      "year": "2020",
+      "state": "MINNESOTA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "1,092,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "1,134,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "893,425,000"
+    },
+    {
+      "year": "2020",
+      "state": "SOUTH DAKOTA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "205,650,000"
+    },
+    {
+      "year": "2020",
+      "state": "WEST VIRGINIA",
+      "category": "TURKEYS",
+      "data_item_unit": "TURKEYS - PRODUCTION, MEASURED IN LB",
+      "value": "125,970,000"
+    }
+  ],
+  "cattle": [
+    {
+      "year": "2020",
+      "state": "ALABAMA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "544,228,000"
+    },
+    {
+      "year": "2020",
+      "state": "ARIZONA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "488,960,000"
+    },
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "2,276,503,000"
+    },
+    {
+      "year": "2020",
+      "state": "CONNECTICUT",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "11,607,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "442,240,000"
+    },
+    {
+      "year": "2020",
+      "state": "HAWAII",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "36,058,000"
+    },
+    {
+      "year": "2020",
+      "state": "ILLINOIS",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "485,153,000"
+    },
+    {
+      "year": "2020",
+      "state": "IOWA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "2,132,328,000"
+    },
+    {
+      "year": "2020",
+      "state": "KENTUCKY",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "667,595,000"
+    },
+    {
+      "year": "2020",
+      "state": "MAINE",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "17,890,000"
+    },
+    {
+      "year": "2020",
+      "state": "MASSACHUSETTS",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "6,331,000"
+    },
+    {
+      "year": "2020",
+      "state": "MINNESOTA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "1,310,582,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSOURI",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "1,343,117,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEBRASKA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "5,625,751,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW HAMPSHIRE",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "7,614,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW MEXICO",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "684,224,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "287,498,000"
+    },
+    {
+      "year": "2020",
+      "state": "OHIO",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "579,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "559,550,000"
+    },
+    {
+      "year": "2020",
+      "state": "RHODE ISLAND",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "610,000"
+    },
+    {
+      "year": "2020",
+      "state": "SOUTH DAKOTA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "1,669,538,000"
+    },
+    {
+      "year": "2020",
+      "state": "TEXAS",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "6,597,409,000"
+    },
+    {
+      "year": "2020",
+      "state": "VERMONT",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "50,212,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "736,745,000"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "1,402,943,000"
+    },
+    {
+      "year": "2020",
+      "state": "ALASKA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "4,611,000"
+    },
+    {
+      "year": "2020",
+      "state": "ARKANSAS",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "516,854,000"
+    },
+    {
+      "year": "2020",
+      "state": "COLORADO",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "2,050,722,000"
+    },
+    {
+      "year": "2020",
+      "state": "DELAWARE",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "4,775,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "385,160,000"
+    },
+    {
+      "year": "2020",
+      "state": "IDAHO",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "1,239,150,000"
+    },
+    {
+      "year": "2020",
+      "state": "INDIANA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "291,080,000"
+    },
+    {
+      "year": "2020",
+      "state": "KANSAS",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "4,777,406,000"
+    },
+    {
+      "year": "2020",
+      "state": "LOUISIANA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "193,562,000"
+    },
+    {
+      "year": "2020",
+      "state": "MARYLAND",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "58,648,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "477,897,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSISSIPPI",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "237,318,000"
+    },
+    {
+      "year": "2020",
+      "state": "MONTANA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "1,086,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEVADA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "201,917,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW JERSEY",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "6,199,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW YORK",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "256,321,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH DAKOTA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "753,116,000"
+    },
+    {
+      "year": "2020",
+      "state": "OKLAHOMA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "2,108,600,000"
+    },
+    {
+      "year": "2020",
+      "state": "PENNSYLVANIA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "472,701,000"
+    },
+    {
+      "year": "2020",
+      "state": "SOUTH CAROLINA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "180,175,000"
+    },
+    {
+      "year": "2020",
+      "state": "TENNESSEE",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "626,253,000"
+    },
+    {
+      "year": "2020",
+      "state": "UTAH",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "390,618,000"
+    },
+    {
+      "year": "2020",
+      "state": "VIRGINIA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "466,557,000"
+    },
+    {
+      "year": "2020",
+      "state": "WEST VIRGINIA",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "135,966,000"
+    },
+    {
+      "year": "2020",
+      "state": "WYOMING",
+      "category": "CATTLE",
+      "data_item_unit": "CATTLE, INCL CALVES - PRODUCTION, MEASURED IN LB",
+      "value": "571,687,000"
+    }
+  ],
+  "milk": [
+    {
+      "year": "2020",
+      "state": "ALABAMA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "45,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "ARKANSAS",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "64,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "COLORADO",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "5,150,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "DELAWARE",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "70,500,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "1,772,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "ILLINOIS",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "1,787,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "IOWA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "5,374,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "KENTUCKY",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "938,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MAINE",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "593,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MASSACHUSETTS",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "199,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MINNESOTA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "10,149,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSOURI",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "1,085,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEBRASKA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "1,460,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW HAMPSHIRE",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "234,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW MEXICO",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "8,169,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "895,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OHIO",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "5,618,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "2,629,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "PENNSYLVANIA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "10,276,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "SOUTH CAROLINA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "189,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "TENNESSEE",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "542,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "UTAH",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "2,227,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "VIRGINIA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "1,522,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "WEST VIRGINIA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "89,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "WYOMING",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "188,800,000"
+    },
+    {
+      "year": "2020",
+      "state": "ARIZONA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "4,889,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "41,282,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "CONNECTICUT",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "438,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "2,289,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "IDAHO",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "16,241,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "INDIANA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "4,330,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "KANSAS",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "4,028,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "LOUISIANA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "134,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MARYLAND",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "878,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "11,683,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSISSIPPI",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "131,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MONTANA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "254,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEVADA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "765,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW JERSEY",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "99,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW YORK",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "15,337,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH DAKOTA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "328,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OKLAHOMA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "733,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "4,800,000"
+    },
+    {
+      "year": "2020",
+      "state": "RHODE ISLAND",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "10,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "SOUTH DAKOTA",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "3,120,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "TEXAS",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "14,831,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "VERMONT",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "2,602,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "6,817,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "MILK",
+      "data_item_unit": "MILK - PRODUCTION, MEASURED IN LB",
+      "value": "30,730,000,000"
+    }
+  ],
+  "cabbage": [
+    {
+      "year": "2020",
+      "state": "ARIZONA",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "1,748,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "2,464,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "1,520,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "4,608,000"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "(D)"
+    },
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "5,863,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "(D)"
+    },
+    {
+      "year": "2020",
+      "state": "NEW YORK",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "5,616,000"
+    },
+    {
+      "year": "2020",
+      "state": "TEXAS",
+      "category": "CABBAGE",
+      "data_item_unit": "CABBAGE - PRODUCTION, MEASURED IN CWT",
+      "value": "1,856,000"
+    }
+  ],
+  "carrot": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "CARROTS",
+      "data_item_unit": "CARROTS - PRODUCTION, MEASURED IN CWT",
+      "value": "24,723,000"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "CARROTS",
+      "data_item_unit": "CARROTS - PRODUCTION, MEASURED IN CWT",
+      "value": "1,820,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "CARROTS",
+      "data_item_unit": "CARROTS - PRODUCTION, MEASURED IN CWT",
+      "value": "4,602,000"
+    }
+  ],
+  "lettuce": [
+    {
+      "year": "2020",
+      "state": "ARIZONA",
+      "category": "LETTUCE",
+      "data_item_unit": "LETTUCE, HEAD - PRODUCTION, MEASURED IN CWT",
+      "value": "10,552,500"
+    },
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "LETTUCE",
+      "data_item_unit": "LETTUCE, HEAD - PRODUCTION, MEASURED IN CWT",
+      "value": "30,172,000"
+    }
+  ],
+  "tomato": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "TOMATOES",
+      "data_item_unit": "TOMATOES, IN THE OPEN - PRODUCTION, MEASURED IN CWT",
+      "value": "233,966,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "TOMATOES",
+      "data_item_unit": "TOMATOES, IN THE OPEN - PRODUCTION, MEASURED IN CWT",
+      "value": "6,720,000"
+    }
+  ],
+  "sweet_corn": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "5,346,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "2,835,000"
+    },
+    {
+      "year": "2020",
+      "state": "MINNESOTA",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "15,392,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "4,883,000"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "9,992,500"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "4,320,000"
+    },
+    {
+      "year": "2020",
+      "state": "ILLINOIS",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "1,875,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW YORK",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "2,875,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "SWEET CORN",
+      "data_item_unit": "SWEET CORN - PRODUCTION, MEASURED IN CWT",
+      "value": "15,400,000"
+    }
+  ],
+  "cucumber": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "930,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "(D)"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "1,326,000"
+    },
+    {
+      "year": "2020",
+      "state": "TEXAS",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "473,100"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "3,415,500"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "4,511,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "2,068,500"
+    },
+    {
+      "year": "2020",
+      "state": "WISCONSIN",
+      "category": "CUCUMBERS",
+      "data_item_unit": "CUCUMBERS - PRODUCTION, MEASURED IN CWT",
+      "value": "(D)"
+    }
+  ],
+  "pepper": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "5,805,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "(D)"
+    },
+    {
+      "year": "2020",
+      "state": "NEW JERSEY",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "1,045,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "3,871,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "(D)"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "437,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "PEPPERS",
+      "data_item_unit": "PEPPERS, BELL - PRODUCTION, MEASURED IN CWT",
+      "value": "540,500"
+    }
+  ],
+  "sweet_potato": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "SWEET POTATOES",
+      "data_item_unit": "SWEET POTATOES - PRODUCTION, MEASURED IN CWT",
+      "value": "7,920,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "SWEET POTATOES",
+      "data_item_unit": "SWEET POTATOES - PRODUCTION, MEASURED IN CWT",
+      "value": "16,848,000"
+    },
+    {
+      "year": "2020",
+      "state": "MISSISSIPPI",
+      "category": "SWEET POTATOES",
+      "data_item_unit": "SWEET POTATOES - PRODUCTION, MEASURED IN CWT",
+      "value": "5,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "SWEET POTATOES",
+      "data_item_unit": "SWEET POTATOES - PRODUCTION, MEASURED IN CWT",
+      "value": "0"
+    }
+  ],
+  "apple": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "271,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW YORK",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "1,385,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "0"
+    },
+    {
+      "year": "2020",
+      "state": "VIRGINIA",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "163,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "270,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW YORK",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "1,300,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OTHER STATES",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "0"
+    },
+    {
+      "year": "2020",
+      "state": "VIRGINIA",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "160,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "927,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "175,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "PENNSYLVANIA",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "417,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "6,915,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "920,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "180,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "PENNSYLVANIA",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "420,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "APPLES",
+      "data_item_unit": "APPLES - PRODUCTION, MEASURED IN LB",
+      "value": "7,400,000,000"
+    }
+  ],
+  "grape": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "GRAPES",
+      "data_item_unit": "GRAPES - PRODUCTION, MEASURED IN TONS",
+      "value": "5,615,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "GRAPES",
+      "data_item_unit": "GRAPES - PRODUCTION, MEASURED IN TONS",
+      "value": "325,000"
+    }
+  ],
+  "blueberry": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "79,300,000"
+    },
+    {
+      "year": "2020",
+      "state": "GEORGIA",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "74,200,000"
+    },
+    {
+      "year": "2020",
+      "state": "NEW JERSEY",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "44,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "154,000,000"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "21,100,000"
+    },
+    {
+      "year": "2020",
+      "state": "MICHIGAN",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "73,800,000"
+    },
+    {
+      "year": "2020",
+      "state": "NORTH CAROLINA",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "32,900,000"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "BLUEBERRIES",
+      "data_item_unit": "BLUEBERRIES, TAME - PRODUCTION, MEASURED IN LB",
+      "value": "168,000,000"
+    }
+  ],
+  "avocado": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "AVOCADOS",
+      "data_item_unit": "AVOCADOS - PRODUCTION, MEASURED IN TONS",
+      "value": "188,500"
+    },
+    {
+      "year": "2020",
+      "state": "HAWAII",
+      "category": "AVOCADOS",
+      "data_item_unit": "AVOCADOS - PRODUCTION, MEASURED IN TONS",
+      "value": "610"
+    },
+    {
+      "year": "2020",
+      "state": "FLORIDA",
+      "category": "AVOCADOS",
+      "data_item_unit": "AVOCADOS - PRODUCTION, MEASURED IN TONS",
+      "value": "17,500"
+    }
+  ],
+  "cherry": [
+    {
+      "year": "2020",
+      "state": "CALIFORNIA",
+      "category": "CHERRIES",
+      "data_item_unit": "CHERRIES, SWEET - PRODUCTION, MEASURED IN TONS",
+      "value": "66,700"
+    },
+    {
+      "year": "2020",
+      "state": "WASHINGTON",
+      "category": "CHERRIES",
+      "data_item_unit": "CHERRIES, SWEET - PRODUCTION, MEASURED IN TONS",
+      "value": "202,000"
+    },
+    {
+      "year": "2020",
+      "state": "OREGON",
+      "category": "CHERRIES",
+      "data_item_unit": "CHERRIES, SWEET - PRODUCTION, MEASURED IN TONS",
+      "value": "56,400"
+    }
+  ]
+}
