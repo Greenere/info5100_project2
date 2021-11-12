@@ -1,0 +1,90 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Nutrition Radar</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <svg id="nutrition-radar" width=500 height=500 style="border: 1px black solid;"></svg>
+        <script>
+            const radar = d3.select("#nutrition-radar");
+            const radarWidth = radar.attr("width");
+            const radarHeight = radar.attr("height");
+            const radarMargin = {left:50, right:50, top:50, bottom:50};
+
+            const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
+                                 (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
+            
+            const radarRadius = radarCenter[0] - radarMargin.left;
+
+            function polarToCartesian(cx, cy, radius, degree) {
+                const rad = degree/180*Math.PI;
+                const rx = radius*Math.cos(rad);
+                const ry = radius*Math.sin(rad);
+                return [cx + rx, cy + ry];
+            }
+
+            let radarData = {"Water":58, "Fat":15, "Protein":26, "Carbohydrates": 0, "Dietary fiber":0, "Others":100-58-15-26};
+            let labelList = Object.keys(radarData);
+            let valueList = Object.values(radarData);
+            let valueMax = 100;
+            let degreeList = labelList.map((item, index)=>index*360/labelList.length);
+
+            const radiusScale = d3.scaleLinear().domain([0,valueMax]).range([0, radarRadius]);
+            const degreeScale = d3.scaleOrdinal(labelList, degreeList);
+
+            console.log(degreeList);
+
+            // Generate ticks
+            radar.selectAll("circle.radar-ticks").data([0.2, 0.4, 0.6, 0.8, 1].map(item=>item*valueMax))
+                 .join("circle").attr("class", "radar-ticks")
+                 .attr("cx", radarCenter[0]).attr("cy", radarCenter[1])
+                 .attr("r", d=>radiusScale(d))
+                 .attr("fill", "none").attr("stroke", "slategray")
+                 .attr("stroke-width", 1).attr("opacity", 0.5)
+                 .attr("stroke-dasharray", "5 5")
+            
+            const radarLineGen = d3.line()//.curve(d3.curveCardinal.tension(0.5));
+
+            const labelList_p = labelList.map(item=>item);
+            labelList_p.push(labelList[0]);
+            const valueList_p = valueList.map(item=>item);
+            valueList_p.push(valueList[0]);
+
+            const dotPositions = valueList_p.map((item, index)=>{
+                return polarToCartesian(radarCenter[0], radarCenter[1],radiusScale(item), degreeScale(labelList_p[index]));
+            });
+            const barEnds = valueList.map((item, index)=>{
+                return [polarToCartesian(radarCenter[0], radarCenter[1],radiusScale(valueMax), degreeScale(labelList[index])), labelList[index]];
+            });
+
+            radar.selectAll("line.label-bar")
+                 .data(barEnds).join("line").attr("class", "label-bar")
+                 .attr("x1", radarCenter[0]).attr("y1", radarCenter[1])
+                 .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
+                 .attr("stroke", "slategray").attr("stroke-width", 1)
+                 .attr("stroke-dasharray", "1 2")
+
+            radar.append("path")
+                 .attr("d", radarLineGen(dotPositions))
+                 .attr("fill", "lightblue")
+                 .attr("opacity", 0.6)
+                 .attr("stroke", "green")
+                 .attr("stroke-width", 2)
+            
+            radar.selectAll("circle.dot-mark")
+                 .data(dotPositions).join("circle").attr("class", "dot-mark")
+                 .attr("cx", d=>d[0]).attr("cy", d=>d[1])
+                 .attr("r", 5).attr("fill", "navy");
+            
+            radar.selectAll("text.label")
+                 .data(barEnds).join("text").attr("class", "label")
+                 .attr("x", d=>d[0][0]).attr("y", d=>d[0][1])
+                 .text(d=>d[1])
+                 .attr("dominant-baseline", "central")
+                 .attr("text-anchor", "end")
+                 .attr("transform", d=>`rotate(${degreeScale(d[1])}, ${d[0][0]}, ${d[0][1]})`)
+
+        </script>
+    </body>
+</html>
