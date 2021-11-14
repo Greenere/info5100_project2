@@ -3,88 +3,190 @@
         <meta charset="utf-8"/>
         <title>Nutrition Radar</title>
         <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            .gridlines .domain{
+                display: none;
+            }
+            .gridlines{
+                stroke-dasharray: 5,5;
+                stroke:silver;
+                opacity: 0.2;
+            }
+        </style>
     </head>
     <body>
-        <svg id="nutrition-radar" width=500 height=500 style="border: 1px black solid;"></svg>
+        <svg id="nutrition-radar" width=500 height=500 style="border: 1px black solid;"></svg><br/><br/>
+        <svg id="nutrition-details" width = 1000 height=500 style="border: 1px black solid;"></svg>
         <script>
             const radar = d3.select("#nutrition-radar");
             const radarWidth = radar.attr("width");
             const radarHeight = radar.attr("height");
-            const radarMargin = {left:50, right:50, top:50, bottom:50};
+            const radarMargin = {left:50, right:80, top:50, bottom:50};
 
             const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
                                  (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
             
             const radarRadius = radarCenter[0] - radarMargin.left;
 
-            function polarToCartesian(cx, cy, radius, degree) {
+            function polarToCartesian(radius, degree) {
                 const rad = degree/180*Math.PI;
                 const rx = radius*Math.cos(rad);
                 const ry = radius*Math.sin(rad);
-                return [cx + rx, cy + ry];
+                return [rx, ry];
             }
 
-            let radarData = {"Water":58, "Fat":15, "Protein":26, "Carbohydrates": 0, "Dietary fiber":0, "Others":100-58-15-26};
-            let labelList = Object.keys(radarData);
-            let valueList = Object.values(radarData);
-            let valueMax = 100;
-            let degreeList = labelList.map((item, index)=>index*360/labelList.length);
+            const radarAnnotations = radar.append("g").attr("id", "radar-annotations")
+                                                      .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
+            const radarChartArea = radar.append("g").attr("id", "radar-chart-area")
+                                                    .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
 
+            const valueMax = 100;
             const radiusScale = d3.scaleLinear().domain([0,valueMax]).range([0, radarRadius]);
-            const degreeScale = d3.scaleOrdinal(labelList, degreeList);
-
-            console.log(degreeList);
+            const tickValues = [1, 0.8, 0.6, 0.4, 0.2];
 
             // Generate ticks
-            radar.selectAll("circle.radar-ticks").data([0.2, 0.4, 0.6, 0.8, 1].map(item=>item*valueMax))
-                 .join("circle").attr("class", "radar-ticks")
-                 .attr("cx", radarCenter[0]).attr("cy", radarCenter[1])
-                 .attr("r", d=>radiusScale(d))
-                 .attr("fill", "none").attr("stroke", "slategray")
-                 .attr("stroke-width", 1).attr("opacity", 0.5)
-                 .attr("stroke-dasharray", "5 5")
+            radarAnnotations.selectAll("circle.radar-ticks").data(tickValues)
+                       .join("circle").attr("class", "radar-ticks")
+                       .attr("cx", 0).attr("cy", 0)
+                       .attr("r", d=>radiusScale(d*valueMax))
+                       .attr("fill", "gray").attr("stroke", "slategray")
+                       .attr("stroke-width", 0).attr("opacity", 0.1)
+                       .attr("stroke-dasharray", "5 5")
+
+            let radarData = {"Water":58, "Sugar": 0, "Fat":15, "Protein":26};
+            let chickenData = {"Water":63.93, "Sugar": 0, "Fat":12.56, "Protein":24.68};
+            let bananaData = {"Water":74.91, "Sugar": 22.84, "Fat":0.33, "Protein":1.09};
+            let eggData = {"Water":75, "Sugar": 1.12, "Fat":10.6, "Protein":12.6};
+            let sumData = {"Water":67.96, "Sugar":5.5, "Fat":9.62, "Protein":16.09};
+
+            let radarLineGen = d3.line().curve(d3.curveCardinalClosed.tension(1));
+
+            function plotData(id, data, fill, stroke){
+                let labelList = Object.keys(data);
+                let valueList = Object.values(data);
+
+                let degreeMap = (index)=>index*360/valueList.length;
+                let degreeList = labelList.map((item, index)=>degreeMap(index));
+                let degreeScale = d3.scaleOrdinal(labelList, degreeList);
+
+                let dotPositions = valueList.map((item, index)=>{
+                    return polarToCartesian(radiusScale(item), degreeScale(labelList[index]));
+                });
+                
+                let axesEnds = valueList.map((item, index)=>{
+                    return [polarToCartesian(radiusScale(valueMax), degreeScale(labelList[index])), index];
+                })
+
+                radarAnnotations.selectAll("line.label-bar")
+                       .data(axesEnds).join("line").attr("class", "label-bar")
+                       .attr("x1", 0).attr("y1", 0)
+                       .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
+                       .attr("stroke", "slategray").attr("stroke-width", 1)
+                       .attr("stroke-dasharray", "1 2")
             
-            const radarLineGen = d3.line()//.curve(d3.curveCardinal.tension(0.5));
+                radarAnnotations.selectAll("text.label")
+                       .data(axesEnds).join("text").attr("class", "label")
+                       .attr("x", d=>d[0][0]).attr("y", d=>d[0][1])
+                       .text(d=>labelList[d[1]])
+                       .attr("index", d=>d[1])
+                       .attr("dominant-baseline", "central")
+                       .attr("text-anchor", "middle")
+                       .attr("fill", "gray")
 
-            const labelList_p = labelList.map(item=>item);
-            labelList_p.push(labelList[0]);
-            const valueList_p = valueList.map(item=>item);
-            valueList_p.push(valueList[0]);
-
-            const dotPositions = valueList_p.map((item, index)=>{
-                return polarToCartesian(radarCenter[0], radarCenter[1],radiusScale(item), degreeScale(labelList_p[index]));
-            });
-            const barEnds = valueList.map((item, index)=>{
-                return [polarToCartesian(radarCenter[0], radarCenter[1],radiusScale(valueMax), degreeScale(labelList[index])), labelList[index]];
-            });
-
-            radar.selectAll("line.label-bar")
-                 .data(barEnds).join("line").attr("class", "label-bar")
-                 .attr("x1", radarCenter[0]).attr("y1", radarCenter[1])
-                 .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
-                 .attr("stroke", "slategray").attr("stroke-width", 1)
-                 .attr("stroke-dasharray", "1 2")
-
-            radar.append("path")
-                 .attr("d", radarLineGen(dotPositions))
-                 .attr("fill", "lightblue")
-                 .attr("opacity", 0.6)
-                 .attr("stroke", "green")
-                 .attr("stroke-width", 2)
+                radarChartArea.append("path").attr("class", `path-mark-${id}`)
+                     .attr("d", radarLineGen(dotPositions))
+                     .attr("fill", fill)
+                     .attr("opacity", 0.5)
+                     .attr("stroke", stroke)
+                     .attr("stroke-width", 2)
             
-            radar.selectAll("circle.dot-mark")
-                 .data(dotPositions).join("circle").attr("class", "dot-mark")
-                 .attr("cx", d=>d[0]).attr("cy", d=>d[1])
-                 .attr("r", 5).attr("fill", "navy");
-            
-            radar.selectAll("text.label")
-                 .data(barEnds).join("text").attr("class", "label")
-                 .attr("x", d=>d[0][0]).attr("y", d=>d[0][1])
-                 .text(d=>d[1])
-                 .attr("dominant-baseline", "central")
-                 .attr("text-anchor", "end")
-                 .attr("transform", d=>`rotate(${degreeScale(d[1])}, ${d[0][0]}, ${d[0][1]})`)
+                radarChartArea.selectAll(`circle.dot-mark-${id}`)
+                     .data(dotPositions).join("circle").attr("class", `dot-mark-${id}`)
+                     .attr("cx", d=>d[0]).attr("cy", d=>d[1])
+                     .attr("opacity",0.5)
+                     .attr("r", 3).attr("fill", stroke);
+            }
 
+            plotData("beef",radarData, "transparent", "black");
+        </script>
+        <script>
+            const barChart = d3.select("#nutrition-details");
+            const barMargin = {left:50, right:50, top:50, bottom:50};
+            const barWidth = barChart.attr("width") - barMargin.left - barMargin.right;
+            const barHeight = barChart.attr("height") - barMargin.top - barMargin.bottom;
+
+            const barChartAnnotations = barChart.append("g").attr("id", "annotations")
+            const barChartArea = barChart.append("g").attr("id", "bar-chart-area")
+                                         .attr("transform", `translate(${barMargin.left}, ${barMargin.top})`)
+
+            let barData = {"Water":92, "Carbohydrates": 5.88, "Sugars": 5.53, "Fat": 0.18, "Protein": 0.98};
+            let barList = Object.values(barData).map((item, index)=>[Object.keys(barData)[index], item])
+            barList.sort((a,b)=>b[1]-a[1])
+            
+            const gramExtent = d3.extent(barList, d=>d[1]);
+            const gramScale = d3.scaleLinear().domain(gramExtent).range([barHeight, 0]);
+            const itemScale = d3.scaleBand().domain(d3.map(barList, d=>d[0])).range([0, barWidth]).padding(0.5)
+
+            const gramAxis = d3.axisLeft(gramScale)
+            const gramAxisG = barChartAnnotations.append("g").attr("class", "y axis")
+                                         .attr("transform", `translate(${barMargin.left}, ${barMargin.top})`)
+                                         .call(gramAxis)
+            
+            const gramGrids = d3.axisLeft(gramScale).tickFormat("").tickSize(-barWidth)
+            const gramGridsG = barChartAnnotations.append("g").attr("class", "y gridlines")
+                                          .attr("transform", `translate(${barMargin.left}, ${barMargin.top})`)
+                                          .call(gramGrids)
+            
+            const itemAxis = d3.axisBottom(itemScale)
+            const itemAxisG = barChartAnnotations.append("g").attr("class", "x axis")
+                                         .attr("transform", `translate(${barMargin.left}, ${barMargin.top + barHeight + 10})`)
+                                         .call(itemAxis)
+            
+            const itemGrids = d3.axisBottom(itemScale).tickFormat("").tickSize(-barHeight)
+            const itemGrdisG = barChartAnnotations.append("g").attr("class", "x gridlines")
+                                          .attr("transform", `translate(${barMargin.left}, ${barMargin.top + barHeight + 10})`)
+                                          .call(itemGrids)
+            
+            function updateBarChart(data){
+                let barList = Object.values(data).map((item, index)=>[Object.keys(data)[index], item])
+                barList.sort((a,b)=>b[1]-a[1])
+                let gramExtent = d3.extent(barList, d=>d[1]);
+
+                gramScale.domain(gramExtent);
+                itemScale.domain(d3.map(barList, d=>d[0]));
+
+                gramAxis.scale(gramScale);
+                gramGrids.scale(gramScale);
+                itemAxis.scale(itemScale);
+                itemGrids.scale(itemScale);
+
+                gramAxisG.call(gramAxis);
+                gramGridsG.call(gramGrids);
+                itemAxisG.call(itemAxis);
+                itemGrdisG.call(itemGrids);
+
+                barChartArea.selectAll("rect.bars").data(barList)
+                        .join(
+                            enter=>enter.append("rect")
+                                        .attr("class", "bars")
+                                        .attr("x", d=>itemScale(d[0]))
+                                        .attr("y", d=>gramScale(d[1]))
+                                        .attr("width", itemScale.bandwidth())
+                                        .attr("height",d=>gramScale(0)-gramScale(d[1]))
+                                        .attr("fill", "navy"),
+                            update=>update.call(update=>update.transition()
+                                                      .attr("x", d=>itemScale(d[0]))
+                                                      .attr("y", d=>gramScale(d[1]))
+                                                      .attr("width", itemScale.bandwidth())
+                                                      .attr("height",d=>gramScale(0)-gramScale(d[1]))
+                            ),
+                            exit=> exit.call( exit => exit.transition().attr('opacity',0).remove() ) 
+                        )
+            }
+
+            let barData2 = {"Water":0, "Carbohydrates": 5.88, "Sugars": 5.53, "Fat": 0.18, "Protein": 0.98};
+
+            updateBarChart(barData);
         </script>
     </body>
 </html>
