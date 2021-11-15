@@ -15,13 +15,13 @@
         </style>
     </head>
     <body>
-        <svg id="nutrition-radar" width=500 height=500 style="border: 1px black solid;"></svg><br/><br/>
+        <svg id="nutrition-radar" width=600 height=600 style="border: 1px black solid;"></svg><br/><br/>
         <svg id="nutrition-details" width = 1000 height=500 style="border: 1px black solid;"></svg>
         <script>
             const radar = d3.select("#nutrition-radar");
             const radarWidth = radar.attr("width");
             const radarHeight = radar.attr("height");
-            const radarMargin = {left:50, right:80, top:50, bottom:50};
+            const radarMargin = {left:80, right:80, top:50, bottom:50};
 
             const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
                                  (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
@@ -41,8 +41,8 @@
                                                     .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
 
             const valueMax = 100;
-            const radiusScale = d3.scaleLinear().domain([0,valueMax]).range([0, radarRadius]);
-            const tickValues = [1, 0.8, 0.6, 0.4, 0.2];
+            const radiusScale = d3.scaleLog().domain([1e-7,valueMax]).range([0, radarRadius]);
+            const tickValues = [1, 0.1, 0.01, 0.001, 0.0001, 1e-5, 1e-6];
 
             // Generate ticks
             radarAnnotations.selectAll("circle.radar-ticks").data(tickValues)
@@ -53,17 +53,68 @@
                        .attr("stroke-width", 0).attr("opacity", 0.1)
                        .attr("stroke-dasharray", "5 5")
 
-            let radarData = {"Water":58, "Sugar": 0, "Fat":15, "Protein":26};
-            let chickenData = {"Water":63.93, "Sugar": 0, "Fat":12.56, "Protein":24.68};
-            let bananaData = {"Water":74.91, "Sugar": 22.84, "Fat":0.33, "Protein":1.09};
-            let eggData = {"Water":75, "Sugar": 1.12, "Fat":10.6, "Protein":12.6};
-            let sumData = {"Water":67.96, "Sugar":5.5, "Fat":9.62, "Protein":16.09};
+            //let radarData = {"Water":92, "Carbohydrates": 5.88, "Fat":0.18, "Protein":0.98, "Dietary Fiber": 3, "Iron":0.00023};
+            let radarData = {};
+            let sampleElement = {
+                                 "short_name": "Eggplant",
+                                 "name": "Eggplant, raw",
+                                 "nutrition": {
+                                     "Energy": { "quantity": "104 kJ (25 kcal)", "dv": null },
+                                     "Carbohydrates": { "quantity": "5.88 g", "dv": null },
+                                     "Sugars": { "quantity": "3.53 g", "dv": null },
+                                     "Dietary fiber": { "quantity": "3 g", "dv": null },
+                                     "Fat": { "quantity": "0.18 g", "dv": null },
+                                     "Protein": { "quantity": "0.98 g", "dv": null },
+                                     "Thiamine (B1)": { "quantity": "0.039 mg", "dv": "3%" },
+                                     "Riboflavin (B2)": { "quantity": "0.037 mg", "dv": "3%" },
+                                     "Niacin (B3)": { "quantity": "0.649 mg", "dv": "4%" },
+                                     "Pantothenic acid (B5)": { "quantity": "0.281 mg", "dv": "6%" },
+                                     "Vitamin B6": { "quantity": "0.084 mg", "dv": "6%" },
+                                     "Folate (B9)": { "quantity": "22 μg", "dv": "6%" },
+                                     "Vitamin C": { "quantity": "2.2 mg", "dv": "3%" },
+                                     "Vitamin E": { "quantity": "0.3 mg", "dv": "2%" },
+                                     "Vitamin K": { "quantity": "3.5 μg", "dv": "3%" },
+                                     "Calcium": { "quantity": "9 mg", "dv": "1%" },
+                                     "Iron": { "quantity": "0.23 mg", "dv": "2%" },
+                                     "Magnesium": { "quantity": "14 mg", "dv": "4%" },
+                                     "Manganese": { "quantity": "0.232 mg", "dv": "11%" },
+                                     "Phosphorus": { "quantity": "24 mg", "dv": "3%" },
+                                     "Potassium": { "quantity": "229 mg", "dv": "5%" },
+                                     "Zinc": { "quantity": "0.16 mg", "dv": "2%" },
+                                     "Water": { "quantity": "92 g", "dv": null }
+                                }
+                            }
 
-            let radarLineGen = d3.line().curve(d3.curveCardinalClosed.tension(1));
+            for(let key in sampleElement.nutrition){
+                if (key == 'Energy'){
+                    continue;
+                }
+                let sample = sampleElement.nutrition[key];
+                let [quantity, unit] = sample['quantity'].split(' ');
+                console.log(quantity, unit)
+                let unitMap = {
+                    'g':1,
+                    'mg':1e-3,
+                    'μg':1e-6,
+                    undefined:1,
+                }
+                if (!unitMap.hasOwnProperty(unit)){
+                    continue;
+                }
+                radarData[key] = Number(quantity)*unitMap[unit] + 1e-7;
+            }
+
+            let radarLineGen = d3.line().curve(d3.curveCardinalClosed.tension(0.9));
 
             function plotData(id, data, fill, stroke){
                 let labelList = Object.keys(data);
                 let valueList = Object.values(data);
+
+                let couple = labelList.map((item, index)=>[item, valueList[index]]);
+                couple.sort((a,b)=>a[0].charCodeAt(0)-b[0].charCodeAt(0))
+
+                labelList = couple.map(item=>item[0]);
+                valueList = couple.map(item=>item[1]);
 
                 let degreeMap = (index)=>index*360/valueList.length;
                 let degreeList = labelList.map((item, index)=>degreeMap(index));
@@ -74,7 +125,7 @@
                 });
                 
                 let axesEnds = valueList.map((item, index)=>{
-                    return [polarToCartesian(radiusScale(valueMax), degreeScale(labelList[index])), index];
+                    return [polarToCartesian(radiusScale(valueMax)*1.2, degreeScale(labelList[index])), index];
                 })
 
                 radarAnnotations.selectAll("line.label-bar")
@@ -88,15 +139,15 @@
                        .data(axesEnds).join("text").attr("class", "label")
                        .attr("x", d=>d[0][0]).attr("y", d=>d[0][1])
                        .text(d=>labelList[d[1]])
-                       .attr("index", d=>d[1])
                        .attr("dominant-baseline", "central")
                        .attr("text-anchor", "middle")
-                       .attr("fill", "gray")
+                       .attr("fill", "black")
+                       .style("font-size", "9px")
 
                 radarChartArea.append("path").attr("class", `path-mark-${id}`)
                      .attr("d", radarLineGen(dotPositions))
                      .attr("fill", fill)
-                     .attr("opacity", 0.5)
+                     .attr("opacity", 0.3)
                      .attr("stroke", stroke)
                      .attr("stroke-width", 2)
             
@@ -107,7 +158,8 @@
                      .attr("r", 3).attr("fill", stroke);
             }
 
-            plotData("beef",radarData, "transparent", "black");
+            plotData("eggplant",radarData, "brown", "black");
+            //plotData("banana", bananaData, "yellow", "black")
         </script>
         <script>
             const barChart = d3.select("#nutrition-details");
