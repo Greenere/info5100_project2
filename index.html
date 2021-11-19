@@ -15,7 +15,7 @@
             .centered{
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
             }
 
             * {
@@ -50,6 +50,20 @@
                 color:crimson;
                 font-weight: bold;
             }
+
+            .reset-btn{
+                width: 70px;
+                color: grey;
+                padding: 4px 12px;
+                border: 1px solid rgba(0,0,0,0.21);
+                border-bottom: 4px solid rgba(0,0,0,0.21);
+                border-radius: 4px;
+                background:linear-gradient(rgb(250, 250, 115) 0%, rgb(253, 229, 132) 100%)
+            }
+            .reset-btn:hover{
+                cursor: pointer;
+                border: 2px solid rgba(0,0,0,0.21);
+            }
         </style>
     </head>
     <body>
@@ -66,14 +80,17 @@
         </div>
         <br/>
         <div class="centered">
-            <div>
+            <div class="svg-1">
                 <svg id="plate_and_food" width=500 height=500 style="border: 0px black solid;">
-            <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
-             </svg>
-             </div>
-             <div>
-            <svg id="nutrition-radar" width=600 height=500 style="border: 0px black solid;"></svg><br/><br/>
-        </div>
+                    <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
+                </svg>
+            </div>
+            <div class="btn">
+                <button class="reset-btn">RESET</button>
+            </div>
+            <div>
+                <svg id="nutrition-radar" width=600 height=500 style="border: 0px black solid;"></svg><br/><br/>
+            </div>
         </div>
         <div class="centered description">
             <p style="width:1100px">
@@ -584,6 +601,8 @@
                   d.x = originX
                   d.y = originY
                 }
+                d.originX = d3.select(this).attr('originX')
+                d.originY = d3.select(this).attr('originY')
                 d.first = true;
                 if (!isInsidethePlate(d)) {
                   idList = idList.filter(item=>item.id != d3.select(this).datum().id)
@@ -761,12 +780,25 @@
                }
                // initial food map
                updateMap([])
+               let btn = document.querySelector(".reset-btn")
+               btn.addEventListener("click",function(){
+                    idList = []
+                   updateView(nutritions, idList);
+                   updateMap([])
+                   let a = foodIcons.selectAll("image.on-plate")
+                                    .transition()
+                                    .duration(500)
+                                    .attr("x", d=>{
+                                            d.x = d.originX
+                                            d.y = d.originY
+                                        return d.originX
+                                    }).attr("y",d=>d.originY)
+               })
             }
 
             //Need to enter state abbreviations  
            
             plateAndFoodRegion();
-
             
         </script>
     </body>
