@@ -1,0 +1,617 @@
+<html>
+    <head>
+        <title>state production</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://d3js.org/topojson.v3.min.js"></script>
+        <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+        <style>
+
+.county {
+      fill: slateblue;
+      stroke: none;
+    }
+
+    .state {
+      fill: lightgrey;
+      stroke: none;
+    }
+
+    .county-outline {
+      stroke: darkblue;
+      stroke-width: 1px;
+      fill: none;
+    }
+
+    .state-outline {
+      stroke: darkgrey;
+      stroke-width: 2px;
+      fill: none;
+    }
+
+    .graticule {
+      fill: none;
+      stroke: lightgrey;
+    }
+
+
+    .gridlines line {
+      stroke: #bbb;
+    }
+
+    .gridlines .domain {
+      stroke: none;
+    }
+
+        </style>
+    </head>
+    <body>
+        <div class="container larger">
+        <h2>Production and consumption by state</h2>
+        <p id="p3">
+            <text></text></br>
+        </p>
+        <div><svg id="productionmap" height="800" width="1200" style="margin:20px"></svg> </div>
+        <!-- <ul id = 'ul_1'></ul> -->
+
+        <script>
+            
+            //console.log(us);
+            //const prod = await d3.json("new_production.json")
+
+            // prod.forEach((d,i) => {
+            //   console.log(d);
+
+            // })
+
+            //console.log(prod);
+        
+            
+          var svgWidth = 1200;
+          var svgHeight = 800;
+
+            var svg = d3.select("svg#productionmap")
+                        .append("svg")
+                        .attr("width",svgWidth)
+                        .attr("height",svgHeight);
+            
+        
+            var margin = {top: 10, right: 10, bottom: 70, left: 50};
+            
+            var chartWidth = svgWidth - margin.left - margin.right;
+            var chartHeight = svgHeight - margin.top - margin.bottom;
+
+            var chosenXAxis = "production";
+            var chosenYAxis = "consumption percentage"; 
+
+            let annotations = svg.append("g").attr("id","annotations");
+                            
+                            
+            let chartArea = svg.append("g").attr("id","points")
+                            .attr("transform",`translate(${margin.left},${margin.top})`);
+
+            
+
+            //d3.select("#label").raise();
+
+            function xScale(data, chosenXAxis) {
+                // create scales
+                var xLinearScale = d3.scaleLinear()
+                    .domain([d3.min(data, d => d[chosenXAxis]) *0.8,
+                    d3.max(data, d => d[chosenXAxis])
+                    ])
+                    .range([0, chartWidth]);
+
+                return xLinearScale;
+
+            }
+            // function used for updating y-scale var upon click on axis label
+            function yScale(data, chosenYAxis) {
+                // create scales
+                var yLinearScale = d3.scaleLinear()
+                    .domain([d3.min(data, d => d[chosenYAxis]) *0.9,
+                    [d3.max(data, d => d[chosenYAxis])
+                    ]])
+                    .range([chartHeight, 0]);
+
+                return yLinearScale;
+
+            }
+
+            // function used for updating xAxis var upon click on axis label
+            function renderAxes(newXScale, xAxis) {
+                var bottomAxis = d3.axisBottom(newXScale);
+
+                xAxis.transition()
+                    .duration(1000)
+                    .call(bottomAxis);
+
+                return xAxis;
+            }
+
+
+            // function used for updating yAxis var upon click on axis label
+            function renderYAxes(newYScale, yAxis) {
+                var leftAxis = d3.axisLeft(newYScale);
+
+                yAxis.transition()
+                    .duration(1000)
+                    .call(leftAxis);
+
+                return yAxis;
+            }
+
+            // function used for updating circles group with a transition to
+            // new circles
+            function renderCircles(stateCircle, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+
+                stateCircle.transition()
+                    .duration(1000)
+                    .attr("cx", d => newXScale(d[chosenXAxis]))
+                    .attr("cy", d => newYScale(d[chosenYAxis]));
+
+                return stateCircle;
+            }
+
+            // transitions labels
+            function renderStates(stateAbbr, newXscale, chosenXAxis, newYScale, chosenYAxis) {
+                stateAbbr.transition()
+                    .duration(1000)
+                    .attr("x", d => newXscale(d[chosenXAxis]))
+                    .attr("y", d => newYScale(d[chosenYAxis]));;
+
+                return stateAbbr;
+
+            }
+            function updateToolTip(chosenXAxis, stateCircle) {
+    
+                  var xlabel;
+
+                  if (chosenXAxis === "Chicken") {
+                      xlabel = "Chicken: ";
+                  }
+                  else if (chosenXAxis === "Turkey") {
+                      xlabel = "Turkey: ";
+                  }
+                  else if (chosenXAxis === "Beef") {
+                      xlabel = "Beef: ";
+                  }
+                  else if (chosenXAxis === "Carrots") {
+                      xlabel = "Carrots: ";
+                  }
+                  else if (chosenXAxis === "Lettuces") {
+                      xlabel = "Lettuces: ";
+                  }
+                  else if (chosenXAxis === "Cucumber") {
+                      xlabel = "Cucumber: ";
+                  }
+                  else if (chosenXAxis === "Sweet_corn") {
+                      xlabel = "Sweet_corn: ";
+                  }
+                  else if (chosenXAxis === "Peppers") {
+                      xlabel = "Peppers: ";
+                  }
+                  else if (chosenXAxis === "Sweet_potato") {
+                      xlabel = "Sweet_potato: ";
+                  }
+                  else if (chosenXAxis === "Apples") {
+                      xlabel = "Apples: ";
+                  }
+                  else if (chosenXAxis === "Grapes") {
+                      xlabel = "Grapes: ";
+                  }
+
+                  var ylabel;
+
+                  if (chosenYAxis === "Chicken") {
+                      ylabel = "chicken: ";
+                  }
+                  else if (chosenYAxis === "Turkey") {
+                      ylabel = "Turkey: ";
+                  }
+                  else if (chosenYAxis === "Beef") {
+                    ylabel = "Beef: ";
+                  }
+                  else if (chosenYAxis === "Carrots") {
+                    ylabel = "Carrots: ";
+                  }
+                  else if (chosenYAxis === "Lettuces") {
+                    ylabel = "Lettuces: ";
+                  }
+                  else if (chosenYAxis === "Cucumber") {
+                    ylabel = "Cucumber: ";
+                  }
+                  else if (chosenYAxis === "Sweet_corn") {
+                    ylabel = "Sweet_corn: ";
+                  }
+                  else if (chosenYAxis === "Peppers") {
+                    ylabel = "Peppers: ";
+                  }
+                  else if (chosenYAxis === "Sweet_potato") {
+                    ylabel = "Sweet_potato: ";
+                  }
+                  else if (chosenYAxis === "Apples") {
+                    ylabel = "Apples: ";
+                  }
+                  else if (chosenYAxis === "Grapes") {
+                    ylabel = "Grapes: ";
+                  }
+
+                //   var toolTip = d3.tip()
+                //       .attr("class", "tooltip")
+                //       .offset([80, -60])
+                //       .html(function (d) {
+                //         console.log(d)
+                //         return (`${d.state}<br>${xlabel} ${d[chosenXAxis]}% <br>${ylabel} ${d[chosenYAxis]}`);
+                //       });
+
+                //   stateCircle.call(toolTip);
+
+                  stateCircle.on("mouseover", function (data) {
+                    //   toolTip.show(data, this);
+                  })
+                      // onmouseout event
+                      .on("mouseout", function (data) {
+                        //   toolTip.hide(data);
+                      });
+
+                  return stateCircle;
+                  }
+        const drawMap = async () => {
+    
+                let us = await d3.json("state.json");
+
+                const usa = await d3.json("./us-smaller.json");
+                var states = topojson.feature(usa, usa.objects.states);     // List of state outlines to fill
+                var statesMesh = topojson.mesh(usa, usa.objects.states);    // 'Mesh' of all outlines put together for a stroke
+                var projection = d3.geoAlbersUsa().fitSize([chartWidth, chartHeight], states);
+                var path = d3.geoPath().projection(projection);
+
+                   
+
+
+
+                const geo = await d3.csv("state_geo.csv");
+                console.log(geo);
+                geo.forEach((d,i)=> {
+                  d['Latitude'] = Number(d['Latitude']);
+                  d['Logitude'] = Number(d['Logitude']);
+                  us.forEach((data)=>{
+                    if (data.Abb == d.Abb){
+                      data["latitude"] = Number(data['latitude'])
+                      data["longitude"] = Number(d['Logitude'])
+                    }
+                  })
+                })
+                console.log(us);
+
+                us = us.filter((data)=>!['AK','HI','CNMI','GU', 'PR','USVI'].includes(data.Abb))
+                   
+                    // data.age = +data.age;
+                    // data.income = +data.income;
+                    // data.poverty = +data.poverty;
+                    // data.healthcare = +data.healthcare;
+                    // data.obesity = +data.obesity;
+                    // data.smokes = +data.smokes;
+    
+
+
+
+            //console.log(data)
+
+            let category = "Chicken_per"
+               
+            
+            const latiExtent = d3.extent(us, d => d['latitude']);
+             const latiScale = d3.scaleLinear().domain([25, 55]).range([chartHeight, 0]);
+            //const latiScale = d3.scaleLinear().domain(latiExtent).range([chartHeight, 0]);
+            const longiExtent = d3.extent(us, d => d['longitude']);
+            const longiScale = d3.scaleLinear().domain([130,65]).range([0,chartWidth]);
+            //const longiScale = d3.scaleLinear().domain(longiExtent).range([0,chartWidth]);
+
+            const chickenExtent = d3.extent(us, d => d[category]);
+            const chickenScale = d3.scaleSequential(chickenExtent,d3.interpolateBlues);
+            //const chickenScale = d3.scaleLinear().domain(chickenExtent).range([5,30]);
+
+
+            // let bottomAxis = d3.axisBottom(chickenScale)
+            //                   .tickFormat(d3.format(""));  // exact value without commas
+            // let bottomGridlines = d3.axisBottom(chickenScale)
+            //                         .tickSize(-chartHeight-10)
+            //                         .tickFormat("")
+           
+          let bottomAxis = d3.axisBottom(longiScale)
+                              //.tickFormat(d3.format(""));  // exact value without commas
+           let bottomGridlines = d3.axisBottom(longiScale)
+                                    .tickSize(-chartHeight-10)
+                                    .tickFormat("")
+            // annotations.append("g")
+            //   .attr("class", "x axis")
+            //   .attr("transform",`translate(${margin.left},${chartHeight+margin.top+10})`)
+            //   .call(bottomAxis);
+
+            annotations.append("g")
+              .attr("class", "x gridlines")
+              .attr("transform",`translate(${margin.left},${chartHeight+margin.top+10})`)
+              .call(bottomGridlines);
+            
+
+            
+            
+              
+
+            //var xLinearScale = xScale(us, chosenXAxis);
+
+            //var yLinearScale = yScale(us, chosenYAxis);
+
+            // Step 3: Create axis functions
+            // ==============================
+            //var bottomAxis = d3.axisBottom(xLinearScale);
+            //var leftAxis = d3.axisLeft(yLinearScale);
+
+            // Step 4: Append Axes to the chart
+            // ==============================
+            // var xAxis = chartArea.append("g")
+            //     .classed("x-axis", true)
+            //     .attr("transform", `translate(0, ${chartHeight})`)
+            //     .call(bottomAxis);
+            
+            let leftAxis = d3.axisLeft(latiScale)
+                            .tickFormat(d3.format(""))  // shorter scientific notation with a dollar sign in front
+            let leftGridlines = d3.axisLeft(latiScale)
+                                  .tickSize(-chartWidth-10)
+                                  .tickFormat("")
+            
+            // Y axis
+            // annotations.append("g")
+            //   .attr("class", "y axis")
+            //   .attr("transform",`translate(${margin.left-10},${margin.top})`)
+            //   .call(leftAxis)
+            
+            
+
+            annotations.append("g")
+              .attr("class", "y gridlines")
+              .attr("transform",`translate(${margin.left-10},${margin.top})`)
+              .call(leftGridlines);
+
+            // var yAxis = chartArea.append("g")
+            //     .classed("y-axis", true)
+            //     .attr("transform", `translate(0, 0)`)
+            //     .call(leftAxis);
+
+            // Step 5: Create Circles
+            // ==============================
+
+
+            var stateCircle = chartArea.selectAll("circle")
+                .data(us)
+                .join("circle")
+                .attr("cx", d => longiScale(d['longitude']))
+                .attr("cy", d => latiScale(d['latitude']))
+                .attr("r", 20)
+                .attr("fill", d=>chickenScale(d[category]))
+                .attr("opacity", "0.9")
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+
+            //Need to enter state abbreviations  
+            var stateAbbr = chartArea.selectAll("null")
+                .data(us)
+                .enter()
+                .append("text")
+                .text(d => d.Abb)
+                .attr("x", d => longiScale(d['longitude']))
+                .attr("y", d => latiScale(d['latitude']))
+                .attr("font-size", d=>chickenScale(d[category])/2)
+                .attr("alignment-baseline", "central")
+                .attr("text-anchor", "middle");
+            var stateCircle = updateToolTip(chosenXAxis, stateCircle);
+
+            // chartArea.append("path").datum(statesMesh)
+            //          .attr("class","outline")
+            //          .attr("fill", "transparent")
+            //          .attr("d", path)
+            //          .attr("stroke", "black")
+            //          .attr("stroke-width", 2)
+            //          .raise();
+// x axis labels event listener
+
+// var xlabelsGroup = chartArea.append("g")
+//         .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 10})`);
+
+
+//     var chickenlabel = xlabelsGroup.append("text")
+//         .attr("x", 0)
+//         .attr("y", 20)
+//         .attr("value", "Chicken") // value to grab for event listener
+//         .classed("active", true)
+//         .text("Chicken");
+
+//     var Turkeylabel = xlabelsGroup.append("text")
+//         .attr("x", 0)
+//         .attr("y", 40)
+//         .attr("value", "Turkey") // value to grab for event listener
+//         .classed("inactive", true)
+//         .text("Turkey");
+
+//     var Beeflabel = xlabelsGroup.append("text")
+//         .attr("x", 0)
+//         .attr("y", 60)
+//         .attr("value", "Beef") // value to grab for event listener
+//         .classed("inactive", true)
+//         .text("Beef");
+
+//     // var ylabelsGroup = chartArea.append("g")
+//     //     // .attr("transform", `translate(${height * 2}, ${width - 100})`);
+//     //     // .attr("transform", "translate(-10,100)");
+//     // // append y axis
+
+//     // var Carrotslabel = ylabelsGroup.append("text")
+//     //     .attr("transform", "rotate(-90)")
+//     //     .attr("y", 0 - margin.left + 20)
+//     //     .attr("x", 0 - (chartHeight / 2))
+//     //     .attr("dy", "1em")
+//     //     .attr("value", "Carrots") // value to grab for event listener
+//     //     // .attr("class", "y-axis-text")
+//     //     .classed("active", true)
+//     //     .text("Carrots")
+
+//     // var Lettuceslabel = ylabelsGroup.append("text")
+//     //     .attr("transform", "rotate(-90)")
+//     //     .attr("y", 0 - margin.left + 40)
+//     //     .attr("x", 0 - (chartHeight / 2))
+//     //     .attr("dy", "1em")
+//     //     // .attr("class", "y-axis-text")
+//     //     .attr("value", "Lettuces") // value to grab for event listener
+//     //     .classed("inactive", true)
+//     //     .text("Lettuces")
+
+//     // var Tomatoeslabel = ylabelsGroup.append("text")
+//     //     .attr("transform", "rotate(-90)")
+//     //     .attr("y", 0 - margin.left + 60)
+//     //     .attr("x", 0 - (chartHeight / 2))
+//     //     .attr("dy", "1em")
+//     //     // .attr("class", "y-axis-text")
+//     //     .attr("value", "Tomatoes") // value to grab for event listener
+//     //     .classed("inactive", true)
+//     //     .text("Tomatoes")
+
+//     // updateToolTip function above csv import
+//     var stateCircle = updateToolTip(chosenXAxis, stateCircle);
+
+//     // x axis labels event listener
+//     xlabelsGroup.selectAll("text")
+//         .on("click", function () {
+//             // get value of selection
+//             var value = d3.select(this).attr("value");
+//             if (value !== chosenXAxis) {
+
+//                 // replaces chosenXAxis with value
+//                 chosenXAxis = value;
+
+//                 console.log(chosenXAxis)
+
+//                 // functions here found above csv import
+//                 // updates x scale for new data
+//                 xLinearScale = xScale(us, chosenXAxis);
+
+
+//                 // updates x axis with transition
+//                 xAxis = renderAxes(xLinearScale, xAxis);
+
+
+//                 // updates circles with new x values
+//                 stateCircle = renderCircles(stateCircle, xLinearScale, chosenXAxis, latiScale, chosenYAxis);
+//                 stateAbbr = renderStates(stateAbbr, xLinearScale, chosenXAxis, latiScale, chosenYAxis)
+
+//                 // updates tooltips with new info
+//                 stateCircle = updateToolTip(chosenXAxis, stateCircle);
+
+//                 // changes classes to change bold text
+//                 if (chosenXAxis === "Chicken") {
+//                     Chickenlabel
+//                         .classed("active", true)
+//                         .classed("inactive", false);
+//                     Turkeylabel
+//                         .classed("active", false)
+//                         .classed("inactive", true);
+//                     Beeflabel
+//                         .classed("active", false)
+//                         .classed("inactive", true);
+//                 }
+//                 else if (chosenXAxis === "Turkey") {
+//                     Chickenlabel
+//                         .classed("active", false)
+//                         .classed("inactive", true);
+//                     Turkeylabel
+//                         .classed("active", true)
+//                         .classed("inactive", false);
+//                     Beeflabel
+//                         .classed("active", false)
+//                         .classed("inactive", true);
+
+//                 }
+//                 else {
+//                     Chickenlabel
+//                         .classed("active", false)
+//                         .classed("inactive", true);
+//                     Turkeylabel
+//                         .classed("active", false)
+//                         .classed("inactive", true);
+//                     Beeflabel
+//                         .classed("active", true)
+//                         .classed("inactive", false);
+//                 }
+//             }
+//         });
+    // //y axis labels event listener
+    // ylabelsGroup.selectAll("text")
+    //     .on("click", function () {
+    //         // get value of selection
+    //         var yvalue = d3.select(this).attr("value");
+    //         if (yvalue !== chosenYAxis) {
+
+    //             // replaces chosenXAxis with value
+    //             chosenYAxis = yvalue;
+
+    //             console.log(chosenYAxis)
+
+    //             // functions here found above csv import
+    //             // functions here found above csv import
+    //             // updates  scale for new data
+
+    //             yLinearScale = yScale(us, chosenYAxis);
+    //             // console.log(yLinearScale)
+    //             // updates axis with transition
+
+    //             yAxis = renderYAxes(yLinearScale, yAxis)
+
+    //             // updates circles with new y values
+    //             stateCircle = renderCircles(stateCircle, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+    //             stateAbbr = renderStates(stateAbbr, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)
+
+    //             // updates tooltips with new info
+    //             stateCircle = updateToolTip(chosenXAxis, stateCircle);
+
+    //             // changes classes to change bold text
+    //             if (chosenYAxis === "Carrots") {
+    //                 Carrotslabel
+    //                     .classed("active", true)
+    //                     .classed("inactive", false);
+    //                 Lettuceslabel
+    //                     .classed("active", false)
+    //                     .classed("inactive", true);
+    //                 Tomatoeslabel
+    //                     .classed("active", false)
+    //                     .classed("inactive", true);
+    //             }
+    //             else if (chosenYAxis === "Lettuces") {
+    //                 Carrotslabel
+    //                     .classed("active", false)
+    //                     .classed("inactive", true);
+    //                 Lettuceslabel
+    //                     .classed("active", true)
+    //                     .classed("inactive", false);
+    //                 Tomatoeslabel
+    //                     .classed("active", false)
+    //                     .classed("inactive", true);
+
+    //             }
+    //             else {
+    //                 Carrotslabel
+    //                     .classed("active", false)
+    //                     .classed("inactive", true);
+    //                 Lettuceslabel
+    //                     .classed("active", false)
+    //                     .classed("inactive", true);
+    //                 Tomatoeslabel
+    //                     .classed("active", true)
+    //                     .classed("inactive", false);
+    //             }
+            //}
+        }
+    drawMap();
+</script>
+</div>
+</body>
+</html>
