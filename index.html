@@ -1,0 +1,647 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Online Kitchen</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            .gridlines .domain{
+                display: none;
+            }
+            .gridlines{
+                stroke-dasharray: 5,5;
+                stroke:silver;
+                opacity: 0.2;
+            }
+        </style>
+    </head>
+    <body>
+        <svg id="plate_and_food" width=600 height=600 style="border: 0px black solid;"></svg>
+        <svg id="nutrition-radar" width=600 height=600 style="border: 0px black solid;"></svg><br/><br/>
+        <svg id="productionmap" height="800" width="1600"></svg>
+        <script>
+            var idSet = new Set();
+            var idList = [];
+
+            const radar = d3.select("#nutrition-radar");
+            const radarWidth = Number(radar.attr("width"));
+            const radarHeight = Number(radar.attr("height"));
+            const radarMargin = {left:160, right:100, top:100, bottom:100};
+
+            const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
+                                 (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
+            
+            const radarRadius = radarCenter[0] - radarMargin.left;
+
+            function polarToCartesian(radius, degree) {
+                const rad = degree/180*Math.PI;
+                const rx = radius*Math.cos(rad);
+                const ry = radius*Math.sin(rad);
+                return [rx, ry];
+            }
+
+            const radarAnnotations = radar.append("g").attr("id", "radar-annotations")
+                                                      .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
+            const radarChartArea = radar.append("g").attr("id", "radar-chart-area")
+                                                    .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
+            
+            const radarLegends = radar.append("g").attr("id", "radar-legends")
+
+            const radarMouseOver = radar.append("g").attr("id", "radar-mouseover")
+                                                    .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
+
+            const valueMax = 100;
+            const radiusScale = d3.scaleLog().domain([1e-7,valueMax]).range([0, radarRadius]);
+            const tickScale = d3.scaleSequential().domain([-2, 6]).range(["#fcfceb", "#f7a00a"])
+            const tickValues = [100, 10, 1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6];
+
+            function getLayerId(value){
+                for (let i = 0; i < tickValues.length; i++){
+                    if (value >= tickValues[i]){
+                        return i;
+                    }
+                }
+            }
+            
+            function valueToTip(value){
+                let tip = "";
+                if (value > 1e-2){
+                    tip = d3.format(".2f")(value) + " g";
+                } else if (value > 1e-5){
+                    tip = d3.format(".2f")(value*1000) + " mg";
+                } else {
+                    tip = d3.format(".2f")(value*1000000) + " μg";
+                }
+                return tip;
+            }
+
+            // Generate ticks
+            radarAnnotations.selectAll("circle.radar-ticks").data(tickValues)
+                       .join("circle").attr("class", "radar-ticks")
+                       .attr("id", d=>`layer-tick${getLayerId(d)}`)
+                       .attr("cx", 0).attr("cy", 0)
+                       .attr("r", d=>radiusScale(d))
+                       .attr("layer", d=>getLayerId(d))
+                       .attr("fill", d=>tickScale(-Math.log10(d))).attr("stroke", "slategray")
+                       .attr("stroke-width", 0).attr("opacity", 1)
+                       .attr("stroke-dasharray", "5 5")
+            
+            radarLegends.selectAll("rect.legend-ticks").data(tickValues)
+                            .join("rect").attr("class", "legend-ticks")
+                            .attr("y", d=>-Math.log10(d)*20 + radarHeight/2 - 80).attr("x", 10)
+                            .attr("width", 20).attr("height", 20)
+                            .attr("layer", d=>getLayerId(d))
+                            .attr("fill", d=>tickScale(-Math.log10(d)))
+                            .attr("active", 0)
+                            .on("mouseover", function(){
+                                let target = d3.select(this);
+                                target.attr("active", 1).attr("stroke-width", 2).attr("stroke", "black").raise();
+                                d3.selectAll(`circle.dot-mark.layer${target.attr("layer")}`).transition()
+                                            .attr("r", 10).attr("fill", "transparent")
+                                            .attr("stroke","black").attr("stroke-width", 2)
+                                            .on("end", ()=>{
+                                                 if (target.attr("active") != 1){
+                                                    d3.selectAll(`circle.dot-mark.layer${target.attr("layer")}`).transition()
+                                                      .attr("r", 5).attr("fill", "black")
+                                                      .attr("stroke","black").attr("stroke-width", 0)
+                                                 }
+                                            })
+                                }
+                            )
+                            .on("mouseout", function(){
+                                let target = d3.select(this);
+                                target.attr("active", 0).attr("stroke-width", 0);
+                                d3.selectAll(`circle.dot-mark.layer${target.attr("layer")}`)
+                                  .attr("r", 5).attr("fill", "black").attr("stroke-width", 0)
+                            })
+            
+            radarLegends.selectAll("text.legend-ticks").data(tickValues)
+                        .join("text").attr("class", "legend-ticks")
+                        .attr("y", d=>-Math.log10(d)*20 + radarHeight/2-80 + 12).attr("x", 10 + 25)
+                        .attr("dominant-baseline", "central")
+                        .attr("text-anchor", "start")
+                        .attr("font-size", "8px")
+                        .text(d=>`~ ${valueToTip(d)}`)
+            
+            const tooltip = radarChartArea.append("text").attr("id", "tooltip").text("")
+                                        .attr("text-anchor","middle").attr("dominant-baseline", "central")
+                                        .attr("fill", "black")
+                                        .style("font-size", "9px").style("font-weight", "bolder")
+
+            let radarLineGen = d3.line().curve(d3.curveCardinalClosed.tension(0.9));
+
+            function plotData(data, fill, stroke){
+                let labelList = Object.keys(data);
+                let valueList = Object.values(data);
+
+                let degreeMap = (index)=>index*360/valueList.length;
+                let degreeList = labelList.map((item, index)=>degreeMap(index));
+                let degreeScale = d3.scaleOrdinal(labelList, degreeList);
+
+                let dotPositions = valueList.map((item, index)=>{
+                    return [polarToCartesian(radiusScale(item), degreeScale(labelList[index])), index];
+                });
+
+                let axesEnds = valueList.map((item, index)=>{
+                    return [polarToCartesian(radiusScale(valueMax)*1.2, degreeScale(labelList[index])), index];
+                })
+
+                radarAnnotations.selectAll("line.label-bar")
+                       .data(axesEnds).join(enter=>{
+                           enter.append("line").attr("class", "label-bar")
+                                .attr("x1", 0).attr("y1", 0)
+                                .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
+                                .attr("opacity", 0.5)
+                                .attr("stroke", stroke).attr("stroke-width", 1)
+                                .attr("stroke-dasharray", "1 2")
+                           },
+                           update=>{update.call(update=>
+                               update.transition()
+                                     .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
+                               )
+                           })
+            
+                radarAnnotations.selectAll("text.label")
+                       .data(axesEnds).join(enter=>{
+                           enter.append("text").attr("class", "label")
+                                .attr("x", d=>d[0][0]).attr("y", d=>d[0][1])
+                                .text(d=>labelList[d[1]])
+                                .attr("dominant-baseline", "central")
+                                .attr("text-anchor", "middle")
+                                .attr("fill", stroke)
+                                .style("font-size", "9px")
+                                .style("font-weight", "bold")
+                          },
+                          update=>{update.call(update=>
+                                update.transition()
+                                      .attr("x", d=>d[0][0]).attr("y", d=>d[0][1]).text(d=>labelList[d[1]])
+                            )})
+                
+                
+                radarChartArea.selectAll("path.path-mark").data([dotPositions.map(d=>d[0])])
+                     .join(enter=>{enter.append("path").attr("class", `path-mark`)
+                                        .attr("d", d=>radarLineGen(d))
+                                        .attr("fill", fill)
+                                        .attr("opacity", 0.3)
+                                        .attr("stroke", stroke)
+                                        .attr("stroke-width", 0)
+                                   },
+                           update=>{update.call(update=>update.transition().attr("d", d=>radarLineGen(d))
+                                          .attr("fill", fill).attr("stroke", stroke))
+                           })
+                
+                tooltip.raise()
+
+                radarChartArea.selectAll("circle.dot-mark").remove()
+                radarChartArea.selectAll(`circle.dot-mark`).data(dotPositions)
+                     .join(enter=>{enter.call(enter=>{
+                                     let dot = enter.append("circle")
+                                                    .attr("class", d=>`dot-mark layer${getLayerId(valueList[d[1]])}`)
+                                                    .attr("quantity", d=>valueList[d[1]])
+                                                    .attr("opacity",0)
+                                                    .attr("active", 0)
+                                                    .attr("r", 5).attr("fill", stroke)
+                                                    .on("mouseover", function(event){
+                                                        let target = d3.select(this);
+                                                        let x = target.attr("cx");
+                                                        let y = target.attr("cy");
+                                                        let value = Number(target.attr("quantity"));
+                                                        let tip = valueToTip(value);
+                                                        target.attr("active", 1)
+                                                            .transition().duration(250)
+                                                            .attr("r", 25).attr("fill", "transparent")
+                                                            .attr("stroke","black").attr("stroke-width", 2)
+                                                            .on("end", function(){
+                                                                if (target.attr("active") != 1){
+                                                                    target.transition()
+                                                                        .attr("r", 5).attr("fill", stroke)
+                                                                        .attr("stroke-width", 0)
+                                                                }
+                                                            })
+
+                                                        tooltip.attr("x", x).attr("y", y).text(tip).transition().duration(250)
+                                                            .attr("opacity", 1)
+                                                            .on("end", function(){
+                                                                if (target.attr("active") != 1){
+                                                                    tooltip.transition().attr("opacity", 0)
+                                                                }
+                                                            })
+                                                    })
+                                                    .on("mouseout", function(){
+                                                        let target = d3.select(this);
+                                                        target.attr("active", 0).attr("r", 5).attr("fill", stroke).attr("stroke-width", 0)
+                                                        tooltip.attr("opacity", 0)
+                                                    })
+                                    dot.transition().attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1]).attr("opacity", 1)
+                                    })
+                                        
+                           },
+                           update=>{update.attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1])
+                                          .attr("class", d=>`dot-mark layer${getLayerId(valueList[d[1]])}`)
+                                          .attr("quantity", d=>valueList[d[1]])
+                         })
+                     
+            }
+
+            function updateView(nutritions, idList){
+                let selected_nutritions = nutritions.filter((item)=>idList.includes(Number(item.id)));
+
+                let radarData = {};
+
+                selected_nutritions.forEach((sample)=>{
+                    for (let key in sample.nutritions){
+                        if (sample.nutritions[key] <= 1e-7){
+                            continue;
+                        }
+
+                        if (radarData.hasOwnProperty(key)){
+                            radarData[key] += Number(sample.nutritions[key])/idList.length;
+                        } else {
+                            radarData[key] = Number(sample.nutritions[key])/idList.length;
+                        }
+                    }
+                })
+
+                plotData(radarData, "red", "black");
+            }
+
+
+            const plateAndFoodRegion = async () => {
+                const nutritions = await d3.json("nutritions_preprocessed.json");
+              let foodData = await d3.json("./foodList.json");
+              let foodList = foodData.data;
+              console.log(foodList);
+              const plateFood = d3.select("svg#plate_and_food");
+              const plateFoodWidth = plateFood.attr("width"); // total width
+              const plateFoodHeight = plateFood.attr("height"); // total height
+              const plateFoodMargin = {left:0, right:0, top:0, bottom:0};
+
+              // Food Menu Area
+              const foodHeight = plateFoodHeight;
+              const foodWidth = 75;
+
+              // Plate Area
+              const plateHeight = plateFoodHeight;
+              const plateWidth = plateFoodWidth - foodWidth;
+              const plateRadius = 150;  // the radius of the round plate
+              const plateMargin = {left: plateWidth / 2 - plateRadius, right: plateWidth / 2 - plateRadius
+                                  , top: plateHeight / 3 - plateRadius, bottom: plateHeight / 2 - plateRadius};
+              const foodMenuHeight = 40;
+              const foodMenuNextIconHeight = 40;
+              const foodListHeight = foodHeight - foodMenuHeight;
+              
+              const plateCanvas = plateFood.append("g")
+                                           .attr("class", "plate_canvas")
+                                           .attr("transform", `translate(${foodWidth + plateMargin.left}, ${plateMargin.top + 6})`)
+
+
+              plateCanvas.append("circle")
+                          .style("stroke", "lightgrey")
+                          .style("stroke-width", 5)
+                          .style("fill", "white")
+                          .attr("r", 200)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+                          .attr("class", "plate")
+              plateCanvas.append("circle")
+                          .style("stroke", "ivory")
+                          .style("fill", "lightgray")
+                          .attr("opacity", 0.7)
+                          .attr("r", 115)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+              plateCanvas.append("circle")
+                          .style("stroke", "ivory")
+                          .style("fill", "ivory")
+                          .attr("r", 110)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+              plateCanvas.append("circle")
+                          .style("stroke", "ivory")
+                          .style("fill", "white")
+                          .attr("r", 100)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+
+
+              // food "canvas"
+              let foodCanvas = plateFood.append("g")
+                                        .attr("class", "food_canvas");                        
+              // food icons
+              let foodIcons = plateFood.append("g")
+                                       .attr("class", "food_icons")
+                                       .attr("cursor", "grab")
+                                       .raise()
+
+              let foodArea = foodCanvas.append("g")
+                                       .append("rect")
+                                       .attr("x", 0)
+                                       .attr("y", 0)
+                                       .attr("width", foodWidth)
+                                       .attr("height", foodHeight)
+                                       .style("stroke", "black")
+                                       .style("stroke-width", "1")
+                                       .attr("fill", "white")
+                                       .attr("class", "food-canvas")
+
+              const foodMenu = foodCanvas.append("g")
+                                        .append("rect")
+                                        .attr("x", 0)
+                                        .attr("y", 0)
+                                        .attr("width", foodWidth)
+                                        .attr("height", foodMenuHeight)
+                                        .style("stroke", "black")
+                                        .style("stroke-width", "1")
+                                        .attr("fill", "white")
+                                        .attr("class", "food-menu")
+                                        // .attr("visibility", "")
+
+              const menuLabel = foodCanvas.append("text")
+                                          .attr("x", foodWidth - 6)
+                                          .attr("y", foodMenuHeight / 2 - 6)
+                                          .style("font", "bold 20px ar")
+                                          .text("MENU")
+                                          .attr("dominant-baseline", "hanging")
+                                          .attr("text-anchor", "end")
+                          
+              // mouseover canvas
+              let mouseover = plateFood.append("g").attr("class", "mouseover") 
+              // Simulation lives here
+              
+              var foods = foodList.slice(0, 12);
+              var updateSpare = foodList.slice(10, 12)
+              console.log(foods);
+              const foodListNextIcon = foodCanvas.append("image")
+                                                 .attr("x", 0)
+                                                 .attr("y", foodHeight - foodMenuNextIconHeight + 1)
+                                                 .attr("width", foodWidth)
+                                                 .attr("height", foodMenuNextIconHeight + 2)
+                                                 .style("cursor", "pointer")
+                                                 .on("click", function() {
+                                                   foods.unshift(updateSpare.pop());
+                                                   updateSpare.unshift(foods.pop());
+                                                   foods.forEach((item)=>{
+                                                     if(idSet.has(item)){
+                                                      item.url = ''
+                                                     }
+                                                   })
+
+                                                   updateFoodList(foods);
+                                                 })
+
+              foodList.sort(function(d1, d2) {
+                return d1["id"] - d2["id"];
+              })                                   
+
+              function updateFoodList(foodList) {
+                foodIcons.selectAll("image.food").remove();
+                let foodElement = foodIcons.selectAll("image.food")
+                                           .data(foodList)
+                                           .join(
+                                             enter => {
+                                               enter.append("image")
+                                                    .attr("class", "food")
+                                                    .attr("href", d => d["url"])
+                                                    .attr("x", 10)
+                                                    .attr("y", (d, i) => foodMenuHeight + i * 50 + 10)
+                                                    .attr("originX",10)
+                                                    .attr("originY",(d, i) => foodMenuHeight + i * 50 + 10)
+                                                    .attr("width", 50)
+                                                    .on("mouseover", function() {
+                                                      let imageValue = d3.select(this).datum();
+                                                      let imagePos = d3.select(this);
+                                                      d3.select("#label_food")
+                                                        .attr("x", imagePos.attr("x"))
+                                                        .attr("y", imagePos.attr("y"))
+                                                        .text(imageValue.short_name)
+                                                        .raise()
+                                                    })
+                                                    .on("mouseout", function() {
+                                                      d3.select("#label_food")
+                                                        .text("")
+                                                    })
+                                                    .call(d3.drag()
+                                                            .on("start", dragstarted)
+                                                            .on("drag", dragged)
+                                                            .on("end", dragended));
+                                             },
+                                             update => update
+                                             .attr("y", (d, i) => foodMenuHeight + i * 50 + 10)
+                                             .attr("originY",(d, i) => foodMenuHeight + i * 50 + 10)
+                                             ,
+                                             exit => {
+                                               exit.remove();
+                                            }
+                                           )
+
+              }
+              updateFoodList(foodList)
+
+
+
+              function dragstarted(event, d) {
+                d3.select(this)
+                  .attr("width", "70")
+                  .attr("stroke-width", 3)
+                  .raise();
+                foodIcons.attr("cursor", "grabbing");
+              }
+
+              function dragged(event, d) {
+
+                
+                if (!d.first) {
+                  let curx = event.x - 35;
+                  let cury = event.y - 35;
+                  d3.select(this)
+                  .attr("x", (d.x = curx))
+                  .attr("y", (d.y = cury))
+                  .raise();
+                } else {
+                  d3.select(this)
+                  .attr("x", (d.x = event.x))
+                  .attr("y", (d.y = event.y))
+                  .raise()
+                }
+                d3.selectAll("#label_food")
+                  .text("")
+              }
+
+              function dragended(event, d) {
+                foodIcons.attr("cursor", "grab");
+                d3.select(this).attr("width", "50")
+                if (isInsidethePlate(d)) {
+                  d3.select(this).attr("class", "on-plate")
+                  idList.push(d3.select(this).datum())
+                }else{
+                  console.log(d3.select(this),d,'hahah')
+                  let originX = d3.select(this).attr('originX')
+                  let originY = d3.select(this).attr('originY')
+                  d3.select(this).attr('x', originX).attr('y',originY).attr("class","food")
+                  d.x = originX
+                  d.y = originY
+                }
+                d.first = true;
+                if (!isInsidethePlate(d)) {
+                  idList = idList.filter(item=>item.id != d3.select(this).datum().id)
+                }
+                updateView(nutritions, idList.map((item)=>item.id));
+                updateMap(idList);
+              }
+
+              function updataX(previouX, d) {
+                if (isInsidethePlate(d)) {return d.x;}
+                else {return previouX;}
+              }
+
+              function updataY(previouY, d) {
+                if (isInsidethePlate(d)) {return d.y;}
+                else {return previouY;}
+              }
+
+              function isInsidethePlate(d) {
+                return d.x >= foodWidth + plateMargin.left 
+                    && d.x <= foodWidth + plateMargin.left + plateRadius * 2
+                    && d.y >= plateMargin.top
+                    && d.y <= plateMargin.top +  plateRadius * 2;
+              }
+
+
+            var svgWidth = 1200;
+            var svgHeight = 800;
+
+            var svg = d3.select("svg#productionmap")
+                        .append("svg")
+                        .attr("width",svgWidth)
+                        .attr("height",svgHeight);
+            
+        
+            var margin = {top: 10, right: 10, bottom: 70, left: 50};
+            
+            var chartWidth = svgWidth - margin.left - margin.right;
+            var chartHeight = svgHeight - margin.top - margin.bottom;
+
+            let annotations = svg.append("g").attr("id","annotations");
+                            
+                            
+            let chartArea = svg.append("g").attr("id","points")
+                            .attr("transform",`translate(${margin.left},${margin.top})`);
+
+
+            let us = await d3.json("state.json");
+
+            const geo = await d3.csv("state_geo.csv");
+            geo.forEach((d,i)=> {
+            d['Latitude'] = Number(d['Latitude']);
+            d['Logitude'] = Number(d['Logitude']);
+            us.forEach((data)=>{
+                if (data.Abb == d.Abb){
+                  data["latitude"] = Number(data['latitude'])
+                  data["longitude"] = Number(d['Logitude'])
+                }
+            })
+            })
+            us = us.filter((data)=>!['AK','HI','CNMI','GU', 'PR','USVI'].includes(data.Abb))
+
+            console.log(us)
+
+            let category = "Chicken_per"
+
+            let foodIdMap = {
+                0:"Chicken_per",
+                1:"Turkey_per",
+                2:"Beef_per",
+                3:"Carrots_per",
+                4:"Lettuces_per",
+                5:"Tomatoes_per",
+                6:"Sweet_corn_per",
+                7:"Cucumber_per",
+                8:"Peppers_per",
+                9:"Sweet_potato_per",
+                10:"Apples_per",
+                11:"Grapes_per",
+            }
+
+            const latiExtent = d3.extent(us, d => d['latitude']);
+            const latiScale = d3.scaleLinear().domain([25, 55]).range([chartHeight, 0]);
+            //const latiScale = d3.scaleLinear().domain(latiExtent).range([chartHeight, 0]);
+            const longiExtent = d3.extent(us, d => d['longitude']);
+            const longiScale = d3.scaleLinear().domain([130,65]).range([0,chartWidth]);
+            //const longiScale = d3.scaleLinear().domain(longiExtent).range([0,chartWidth]);
+
+            //const chickenExtent = d3.extent(us, d => d[category]);
+            const chickenScale = d3.scaleSequential([2, 0],d3.interpolateBlues);
+
+            let bottomAxis = d3.axisBottom(longiScale)
+                            //.tickFormat(d3.format(""));  // exact value without commas
+            let bottomGridlines = d3.axisBottom(longiScale)
+                                    .tickSize(-chartHeight-10)
+                                    .tickFormat("")
+
+            annotations.append("g")
+            .attr("class", "x gridlines")
+            .attr("transform",`translate(${margin.left},${chartHeight+margin.top+10})`)
+            .call(bottomGridlines);
+
+            let leftAxis = d3.axisLeft(latiScale)
+                            .tickFormat(d3.format(""))  // shorter scientific notation with a dollar sign in front
+            let leftGridlines = d3.axisLeft(latiScale)
+                                .tickSize(-chartWidth-10)
+                                .tickFormat("")
+
+            annotations.append("g")
+            .attr("class", "y gridlines")
+            .attr("transform",`translate(${margin.left-10},${margin.top})`)
+            .call(leftGridlines);
+
+            function updateMap(idList){
+                
+                chartArea.selectAll("circle")
+                .data(us)
+                .join(enter=>{
+                    enter.append("circle")
+                   .attr("cx", d => longiScale(d['longitude']))
+                .attr("cy", d => latiScale(d['latitude']))
+                .attr("r", 20)
+                .attr("fill", d=>{
+                    let sum = 0;
+                    idList.forEach((item)=>{
+                        sum += d[foodIdMap[Number(item.id)]]
+                    })
+                    return chickenScale(sum/idList.length)
+                })
+                .attr("opacity", "1")
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)},
+                update=>update.attr("fill", d=>{
+                    let sum = 0;
+                    idList.forEach((item)=>{
+                        sum += d[foodIdMap[Number(item.id)]]
+                    })
+                    return chickenScale(-Math.log10(sum/idList.length))
+                }).attr("opacity", 1)
+                )
+
+                chartArea.selectAll("text")
+                         .data(us)
+                         .join("text")
+                         .text(d => d.Abb)
+                         .attr("x", d => longiScale(d['longitude']))
+                        .attr("y", d => latiScale(d['latitude']))
+                        .attr("font-size", "10px")
+                        .attr("alignment-baseline", "central")
+                        .attr("text-anchor", "middle");
+                
+                        if (idList.length < 1){
+                    chartArea.selectAll("circle").attr("opacity", 0)
+                }
+               }
+            }
+
+            //Need to enter state abbreviations  
+           
+            plateAndFoodRegion();
+
+            
+        </script>
+    </body>
+</html>
