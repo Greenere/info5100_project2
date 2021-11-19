@@ -356,9 +356,9 @@
               // Plate Area
               const plateHeight = plateFoodHeight;
               const plateWidth = plateFoodWidth - foodWidth;
-              const plateRadius = plateWidth*0.4;  // the radius of the round plate
-              const plateMargin = {left: plateWidth / 2 - plateRadius, right: plateWidth / 2 - plateRadius
-                                  , top: plateHeight / 3 - plateRadius, bottom: plateHeight / 2 - plateRadius};
+              const plateRadius = plateWidth * 0.4;  // the radius of the round plate
+            //   const plateMargin = {left: plateWidth / 2 - plateRadius, right: plateWidth / 2 - plateRadius
+            //                       , top: plateHeight / 3 - plateRadius, bottom: plateHeight / 2 - plateRadius};
               const foodMenuHeight = iconSize;
               const foodMenuNextIconHeight = 40;
               const foodListHeight = foodHeight - foodMenuHeight;
@@ -498,11 +498,11 @@
                                                enter.append("image")
                                                     .attr("class", "food")
                                                     .attr("href", d => d["url"])
-                                                    .attr("x", 10)
-                                                    .attr("y", (d, i) => foodMenuHeight + i * iconSize)
-                                                    .attr("originX",10)
-                                                    .attr("originY",(d, i) => foodMenuHeight + i * iconSize)
-                                                    .attr("width", iconSize)
+                                                    .attr("x", 5)
+                                                    .attr("y", (d, i) => foodMenuHeight + i * iconSize - 6)
+                                                    .attr("originX",5)
+                                                    .attr("originY",(d, i) => foodMenuHeight + i * iconSize - 6)
+                                                    .attr("width", iconSize - 4)
                                                     .on("mouseover", function() {
                                                       let imageValue = d3.select(this).datum();
                                                       let imagePos = d3.select(this);
@@ -572,11 +572,15 @@
                   d3.select(this).attr("class", "on-plate")
                   idList.push(d3.select(this).datum())
                 }else{
-                  console.log(d3.select(this),d,'hahah')
                   let originX = d3.select(this).attr('originX')
                   let originY = d3.select(this).attr('originY')
-                  d3.select(this).attr('x', originX).attr('y',originY).attr("class","food")
-                  .attr("width", iconSize)
+                  d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .attr('x', originX)
+                    .attr('y',originY)
+                    .attr("class","food")
+                    .attr("width", iconSize - 4)
                   d.x = originX
                   d.y = originY
                 }
@@ -599,15 +603,19 @@
               }
 
               function isInsidethePlate(d) {
-                console.log(foodWidth + plateMargin.left);
+                // console.log(foodWidth + plateMargin.left);
                 // return d.x >= 140 - plateRadius
                 //     && d.x <= 140 + plateRadius
                 //     && d.y >= 250 - plateRadius
                 //     && d.y <= 250 + plateRadius;
-                return d.x >= foodWidth + plateMargin.left 
-                    && d.x <= foodWidth + plateMargin.left + plateRadius * 2
-                    && d.y >= plateMargin.top
-                    && d.y <= plateMargin.top +  plateRadius * 2;
+                let circleCenterX = foodWidth + plateWidth / 2 - 22;
+                let circleCenterY = plateHeight / 2 - 22;
+                let currentDistancetoCircleCenter = Math.sqrt((d.x - circleCenterX) * (d.x - circleCenterX) 
+                                                            + (d.y - circleCenterY) * (d.y - circleCenterY));
+                // console.log(currentDistancetoCircleCenter);
+                console.log(circleCenterX, circleCenterY);
+                // console.log(plateRadius);
+                return currentDistancetoCircleCenter < plateRadius;
               }
 
 
