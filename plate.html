@@ -3,10 +3,9 @@
         <meta charset="utf-8"/>
         <title>Plate and Food</title>
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     </head>
     <body>
-        <svg id="plate_and_food" width=600 height=600 style="border: 1px black solid;">
+        <svg id="plate_and_food" width=800 height=800 style="border: 1px black solid;">
           <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
         </svg>
         <script>
@@ -42,24 +41,45 @@
               const tabelCanvas = plateFood.append("g")
                                            .attr("class", "table_canvas")
                                            
-              const tabel = plateFood.append("image")
-                                     .attr("x", 30)
-                                     .attr("y", plateHeight / 6 - 20)
-                                     .attr("width", tableWidth + 20)
-                                     .attr("height", tableHeight + 80)
-                                     .attr("href", "./table/round-table2.png")
+              // const tabel = plateFood.append("image")
+              //                        .attr("x", 30)
+              //                        .attr("y", plateHeight / 6 - 20)
+              //                        .attr("width", tableWidth + 20)
+              //                        .attr("height", tableHeight + 80)
+              //                        .attr("href", "./table/round-table2.png")
               // plate "canvas"
               const plateCanvas = plateFood.append("g")
                                            .attr("class", "plate_canvas")
                                            .attr("transform", `translate(${foodWidth + plateMargin.left}, ${plateMargin.top + 6})`)
 
-              const plate = plateCanvas.append("image")
-                                       .attr("x", 0)
-                                       .attr("y", 0)
-                                       .attr("width", plateRadius * 2)
-                                       .attr("height", plateRadius * 2)
-                                       .attr("href", "plates/image1448.png")
-                                       .attr("class", "plate")
+
+              plateCanvas.append("circle")
+                          .style("stroke", "lightgrey")
+                          .style("stroke-width", 5)
+                          .style("fill", "white")
+                          .attr("r", 200)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+                          .attr("class", "plate")
+              plateCanvas.append("circle")
+                          .style("stroke", "ivory")
+                          .style("fill", "lightgray")
+                          .attr("opacity", 0.7)
+                          .attr("r", 115)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+              plateCanvas.append("circle")
+                          .style("stroke", "ivory")
+                          .style("fill", "ivory")
+                          .attr("r", 110)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
+              plateCanvas.append("circle")
+                          .style("stroke", "ivory")
+                          .style("fill", "white")
+                          .attr("r", 100)
+                          .attr("cx", 140)
+                          .attr("cy", 250)
 
 
               // food "canvas"
@@ -111,9 +131,12 @@
                                                        .style("stroke", "black")
                                                        .style("stroke-width", "1")
                                                        .attr("fill", "white");
-
+              // mouseover canvas
+              let mouseover = plateFood.append("g").attr("class", "mouseover") 
               // Simulation lives here
-              var foods = foodList.slice(0, 10);
+              var idSet = new Set();
+              var idList = [];
+              var foods = foodList.slice(0, 12);
               var updateSpare = foodList.slice(10, 12)
               console.log(foods);
               const foodListNextIcon = foodCanvas.append("image")
@@ -124,10 +147,14 @@
                                                  .attr("href", "./nextIcons/down-arrow-svgrepo-com.svg")
                                                  .style("cursor", "pointer")
                                                  .on("click", function() {
-                                                   if (foodIndexRightPtr = 12) {foodIndexRightPtr %= 12;}
-                                                   if (foodIndexLeftPtr = 12) {foodIndexLeftPtr %= 12;}
                                                    foods.unshift(updateSpare.pop());
                                                    updateSpare.unshift(foods.pop());
+                                                   foods.forEach((item)=>{
+                                                     if(idSet.has(item)){
+                                                      item.url = ''
+                                                     }
+                                                   })
+
                                                    updateFoodList(foods);
                                                  })
 
@@ -146,6 +173,8 @@
                                                     .attr("href", d => d["url"])
                                                     .attr("x", 10)
                                                     .attr("y", (d, i) => foodMenuHeight + i * 50 + 10)
+                                                    .attr("originX",10)
+                                                    .attr("originY",(d, i) => foodMenuHeight + i * 50 + 10)
                                                     .attr("width", 50)
                                                     .on("mouseover", function() {
                                                       let imageValue = d3.select(this).datum();
@@ -155,7 +184,6 @@
                                                         .attr("y", imagePos.attr("y"))
                                                         .text(imageValue.short_name)
                                                         .raise()
-
                                                     })
                                                     .on("mouseout", function() {
                                                       d3.select("#label_food")
@@ -166,31 +194,21 @@
                                                             .on("drag", dragged)
                                                             .on("end", dragended));
                                              },
-                                             update => update.attr("y", (d, i) => foodMenuHeight + i * 50 + 10),
+                                             update => update
+                                             .attr("y", (d, i) => foodMenuHeight + i * 50 + 10)
+                                             .attr("originY",(d, i) => foodMenuHeight + i * 50 + 10)
+                                             ,
                                              exit => {
                                                exit.remove();
                                             }
                                            )
 
               }
-              updateFoodList(foodList.slice(0, 10))
+              updateFoodList(foodList)
 
-              var originX = 0;
-              var originY = 0;
-              var idSet = new Set();
-              var idList = [];
 
-              function dragstarted(d) {
-                // console.log(d["subject"]["url"])
-                // foodIcons
-                //   .append("image")
-                //   .attr("class", "food")
-                //   .attr("href", d["subject"]["url"])
-                //   .attr("x", 10)
-                //   .attr("y", d.y)
-                //   .attr("width", 50)
-                originX = d.x;
-                originY = d.y;
+
+              function dragstarted(event, d) {
                 d3.select(this)
                   .attr("width", "70")
                   .attr("stroke-width", 3)
@@ -199,30 +217,40 @@
               }
 
               function dragged(event, d) {
-                // console.log(d);
-                // console.log(event.x);
-                // console.log(event.y);
-                // console.log(event, d)
-                // d.x = event.x;
-                // d.y = event.y;
-                // d3.select(this)
-                //   .attr("x", event.x )
-                //   .attr("y", event.y )
-                //   .raise();
+
+                
+                if (!d.first) {
+                  let curx = event.x - 35;
+                  let cury = event.y - 35;
+                  d3.select(this)
+                  .attr("x", (d.x = curx))
+                  .attr("y", (d.y = cury))
+                  .raise();
+                } else {
+                  d3.select(this)
+                  .attr("x", (d.x = event.x))
+                  .attr("y", (d.y = event.y))
+                  .raise()
+                }
+                d3.selectAll("#label_food")
+                  .text("")
               }
 
               function dragended(event, d) {
-                d3.select(this).attr("stroke", null)
-                               .attr("width", "50")
-                               .attr("x", updataX(originX, d))
-                               .attr("y", updataY(originY, d))
-                               .transition(200)
-
                 foodIcons.attr("cursor", "grab");
-
+                d3.select(this).attr("width", "50")
                 if (isInsidethePlate(d)) {
+                  d3.select(this).attr("class", "on-plate")
                   idSet.add(d3.select(this).datum());
+                }else{
+                  console.log(d3.select(this),d,'hahah')
+                  let originX = d3.select(this).attr('originX')
+                  let originY = d3.select(this).attr('originY')
+                  d3.select(this).attr('x', originX).attr('y',originY).attr("class","food")
+                  d.x = originX
+                  d.y = originY
                 }
+                d.first = true;
                 idList = Array.from(idSet)
               }
 
