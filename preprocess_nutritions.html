@@ -1,0 +1,101 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<text id = "result-text">
+</text>
+<script>
+    var sampleData = {
+                "Water":0,
+                "Carbohydrates":0,
+                "Fat":0,
+                "Protein":0,
+                "Dietary fiber":0,
+                "Starch":0,
+                "Zinc":0,
+                "Calcium":0,
+                "Copper":0,
+                "Iron":0,
+                "Magnesium":0,
+                "Manganese":0,
+                "Potassium":0,
+                "Selenium":0,
+                "Sodium":0,
+                "Phosphorus":0,
+                "Choline":0,
+                "Histidine":0,
+                "Isoleucine":0,
+                "Leucine":0,
+                "Lysine":0,
+                "Phenylalanine":0,
+                "Threonine":0,
+                "Tryptophan":0,
+                "Valine":0,
+                "Vitamin B6":0,
+                "Vitamin E":0,
+                "Vitamin K":0,
+                "Vitamin C":0,
+                "Vitamin A":0
+            }
+
+            for (let key in sampleData){
+                sampleData[key] = 0;
+            }
+
+            function factsToRadarData(facts){
+                let radarData = {};
+
+                for(let key in facts.nutrition){
+                    if (key == 'Energy'){
+                        continue;
+                    }
+                    let sample = facts.nutrition[key];
+                    let [quantity, unit] = sample['quantity'].split(' ');
+                    let unitMap = {
+                       'g':1,
+                       'mg':1e-3,
+                       'μg':1e-6,
+                        undefined:1,
+                    }
+                    if (!unitMap.hasOwnProperty(unit)){
+                        continue;
+                    }
+                    
+                    radarData[key] = Number(quantity)*unitMap[unit] + 1e-7;
+                }
+
+                return radarData;
+            }
+
+               const requestData = async function(){
+                const nutritions = await d3.json("new_nutrition.json");
+                let facts = [];
+                facts = facts.concat(nutritions.protein)
+                facts = facts.concat(nutritions.vegetable)
+                facts = facts.concat(nutritions.fruit)
+
+                let results = [];
+                let temp = {};
+                facts.forEach((fac)=>{
+                    fact = factsToRadarData(fac);
+                    temp = JSON.parse(JSON.stringify(sampleData));
+                    for (let key in temp){
+                        if (fact.hasOwnProperty(key)){
+                            temp[key] = fact[key];
+                        }
+                    }
+                    entry = {
+                        "name":fac["short_name"],
+                        "id":fac["id"],
+                        "nutritions":temp
+                    }
+                    results.push(entry);
+                })
+
+                results.sort((a,b)=>a['id']-b['id'])
+
+                console.log(results)
+                console.log(JSON.stringify(results))
+
+                d3.select("#result-text")
+                .text(JSON.stringify(results))
+            }
+    requestData();
+</script>

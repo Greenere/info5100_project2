@@ -19,9 +19,9 @@
         <svg id="nutrition-details" width = 1000 height=500 style="border: 1px black solid;"></svg>
         <script>
             const radar = d3.select("#nutrition-radar");
-            const radarWidth = radar.attr("width");
-            const radarHeight = radar.attr("height");
-            const radarMargin = {left:80, right:80, top:50, bottom:50};
+            const radarWidth = Number(radar.attr("width"));
+            const radarHeight = Number(radar.attr("height"));
+            const radarMargin = {left:100, right:100, top:100, bottom:100};
 
             const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
                                  (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
@@ -39,70 +39,84 @@
                                                       .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
             const radarChartArea = radar.append("g").attr("id", "radar-chart-area")
                                                     .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
+            
+            const radarLegends = radar.append("g").attr("id", "radar-legends")
+
+            const radarMouseOver = radar.append("g").attr("id", "radar-mouseover")
+                                                    .attr("transform", `translate(${radarCenter[0]}, ${radarCenter[1]})`)
+            
+            var radarOnTransition = false;
 
             const valueMax = 100;
             const radiusScale = d3.scaleLog().domain([1e-7,valueMax]).range([0, radarRadius]);
-            const tickValues = [1, 0.1, 0.01, 0.001, 0.0001, 1e-5, 1e-6];
+            const tickScale = d3.scaleSequential().domain([0, 6]).range(["#fcfceb", "#f7a00a"])
+            const tickValues = [1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6];
+
+            function getLayerId(value){
+                for (let i = 0; i < tickValues.length; i++){
+                    if (value >= tickValues[i]){
+                        return i;
+                    }
+                }
+            }
+            const throttle = (func, clearfunc, limit) => {
+                let inThrottle
+                return function() {
+                    const args = arguments
+                    const context = this
+                    if (!inThrottle) {
+                    func.apply(context, args)
+                    inThrottle = true
+                    setTimeout(() =>{ 
+                        inThrottle = false
+                        clearfunc();
+                    }, limit)
+                    }
+                }
+            }
 
             // Generate ticks
             radarAnnotations.selectAll("circle.radar-ticks").data(tickValues)
                        .join("circle").attr("class", "radar-ticks")
                        .attr("cx", 0).attr("cy", 0)
                        .attr("r", d=>radiusScale(d*valueMax))
-                       .attr("fill", "gray").attr("stroke", "slategray")
-                       .attr("stroke-width", 0).attr("opacity", 0.1)
+                       .attr("fill", d=>tickScale(-Math.log10(d))).attr("stroke", "slategray")
+                       .attr("stroke-width", 0).attr("opacity", 1)
                        .attr("stroke-dasharray", "5 5")
-
-            //let radarData = {"Water":92, "Carbohydrates": 5.88, "Fat":0.18, "Protein":0.98, "Dietary Fiber": 3, "Iron":0.00023};
-            let radarData = {};
-            let sampleElement = {
-                                 "short_name": "Eggplant",
-                                 "name": "Eggplant, raw",
-                                 "nutrition": {
-                                     "Energy": { "quantity": "104 kJ (25 kcal)", "dv": null },
-                                     "Carbohydrates": { "quantity": "5.88 g", "dv": null },
-                                     "Sugars": { "quantity": "3.53 g", "dv": null },
-                                     "Dietary fiber": { "quantity": "3 g", "dv": null },
-                                     "Fat": { "quantity": "0.18 g", "dv": null },
-                                     "Protein": { "quantity": "0.98 g", "dv": null },
-                                     "Thiamine (B1)": { "quantity": "0.039 mg", "dv": "3%" },
-                                     "Riboflavin (B2)": { "quantity": "0.037 mg", "dv": "3%" },
-                                     "Niacin (B3)": { "quantity": "0.649 mg", "dv": "4%" },
-                                     "Pantothenic acid (B5)": { "quantity": "0.281 mg", "dv": "6%" },
-                                     "Vitamin B6": { "quantity": "0.084 mg", "dv": "6%" },
-                                     "Folate (B9)": { "quantity": "22 μg", "dv": "6%" },
-                                     "Vitamin C": { "quantity": "2.2 mg", "dv": "3%" },
-                                     "Vitamin E": { "quantity": "0.3 mg", "dv": "2%" },
-                                     "Vitamin K": { "quantity": "3.5 μg", "dv": "3%" },
-                                     "Calcium": { "quantity": "9 mg", "dv": "1%" },
-                                     "Iron": { "quantity": "0.23 mg", "dv": "2%" },
-                                     "Magnesium": { "quantity": "14 mg", "dv": "4%" },
-                                     "Manganese": { "quantity": "0.232 mg", "dv": "11%" },
-                                     "Phosphorus": { "quantity": "24 mg", "dv": "3%" },
-                                     "Potassium": { "quantity": "229 mg", "dv": "5%" },
-                                     "Zinc": { "quantity": "0.16 mg", "dv": "2%" },
-                                     "Water": { "quantity": "92 g", "dv": null }
-                                }
-                            }
-
-            for(let key in sampleElement.nutrition){
-                if (key == 'Energy'){
-                    continue;
-                }
-                let sample = sampleElement.nutrition[key];
-                let [quantity, unit] = sample['quantity'].split(' ');
-                console.log(quantity, unit)
-                let unitMap = {
-                    'g':1,
-                    'mg':1e-3,
-                    'μg':1e-6,
-                    undefined:1,
-                }
-                if (!unitMap.hasOwnProperty(unit)){
-                    continue;
-                }
-                radarData[key] = Number(quantity)*unitMap[unit] + 1e-7;
-            }
+            
+            radarLegends.selectAll("rect.legend-ticks").data(tickValues)
+                            .join("rect").attr("class", "legend-ticks")
+                            .attr("y", d=>-Math.log10(d)*20 + radarHeight-160).attr("x", radarMargin.left/6)
+                            .attr("width", 20).attr("height", 20)
+                            .attr("layer", d=>getLayerId(d))
+                            .attr("fill", d=>tickScale(-Math.log10(d)))
+                            .on("mouseover", function(){
+                                let target = d3.select(this);
+                                target.attr("stroke-width", 2).attr("stroke", "black").raise();
+                                d3.selectAll(`circle.dot-mark.layer${target.attr("layer")}`).transition()
+                                            .attr("r", 10).attr("fill", "transparent")
+                                            .attr("stroke","black").attr("stroke-width", 2)}
+                            )
+                            .on("mouseout", function(){
+                                let target = d3.select(this);
+                                target.attr("stroke-width", 0).attr("stroke", "black");
+                                d3.selectAll(`circle.dot-mark.layer${target.attr("layer")}`)
+                                            .attr("r", 5).attr("fill", "black")
+                                            .attr("stroke","black").attr("stroke-width", 0)
+                            })
+            
+            radarLegends.selectAll("text.legend-ticks").data(tickValues)
+                        .join("text").attr("class", "legend-ticks")
+                        .attr("y", d=>-Math.log10(d)*20 + radarHeight-160 + 12).attr("x", radarMargin.left/6 + 25)
+                        .attr("dominant-baseline", "central")
+                        .attr("text-anchor", "start")
+                        .attr("font-size", "10px")
+                        .text(d=>`> ${d} g`)
+            
+            const tooltip = radarChartArea.append("text").attr("id", "tooltip").text("")
+                                        .attr("text-anchor","middle").attr("dominant-baseline", "central")
+                                        .attr("fill", "black")
+                                        .style("font-size", "9px").style("font-weight", "bolder")
 
             let radarLineGen = d3.line().curve(d3.curveCardinalClosed.tension(0.9));
 
@@ -110,20 +124,21 @@
                 let labelList = Object.keys(data);
                 let valueList = Object.values(data);
 
-                let couple = labelList.map((item, index)=>[item, valueList[index]]);
-                couple.sort((a,b)=>a[0].charCodeAt(0)-b[0].charCodeAt(0))
+                // let couple = labelList.map((item, index)=>[item, valueList[index]]);
+                // //couple.sort((a,b)=>a[0].charCodeAt(0)-b[0].charCodeAt(0));
+                // //couple.sort((a,b)=>a[1]-b[1])
 
-                labelList = couple.map(item=>item[0]);
-                valueList = couple.map(item=>item[1]);
+                // labelList = couple.map(item=>item[0]);
+                // valueList = couple.map(item=>item[1]);
 
                 let degreeMap = (index)=>index*360/valueList.length;
                 let degreeList = labelList.map((item, index)=>degreeMap(index));
                 let degreeScale = d3.scaleOrdinal(labelList, degreeList);
 
                 let dotPositions = valueList.map((item, index)=>{
-                    return polarToCartesian(radiusScale(item), degreeScale(labelList[index]));
+                    return [polarToCartesian(radiusScale(item), degreeScale(labelList[index])), index];
                 });
-                
+
                 let axesEnds = valueList.map((item, index)=>{
                     return [polarToCartesian(radiusScale(valueMax)*1.2, degreeScale(labelList[index])), index];
                 })
@@ -132,7 +147,8 @@
                        .data(axesEnds).join("line").attr("class", "label-bar")
                        .attr("x1", 0).attr("y1", 0)
                        .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
-                       .attr("stroke", "slategray").attr("stroke-width", 1)
+                       .attr("opacity", 0.5)
+                       .attr("stroke", stroke).attr("stroke-width", 1)
                        .attr("stroke-dasharray", "1 2")
             
                 radarAnnotations.selectAll("text.label")
@@ -141,25 +157,113 @@
                        .text(d=>labelList[d[1]])
                        .attr("dominant-baseline", "central")
                        .attr("text-anchor", "middle")
-                       .attr("fill", "black")
+                       .attr("fill", stroke)
                        .style("font-size", "9px")
+                       .style("font-weight", "bold")
+                
+                /*radarChartArea.selectAll(`line.line-mark`).data(dotPositions)
+                     .join(enter=>{enter.append("line")
+                                        .attr("class", `line-mark`)
+                                        .attr("x1", 0).attr("y1", 0)
+                                        .attr("x2", d=>d[0]).attr("y2", d=>d[1])
+                                        .attr("stroke-width", 2)
+                                        .attr("opacity",0.6).attr("stroke", fill);
+                           },
+                           update=>{update.attr("x2", d=>d[0]).attr("y2", d=>d[1])
+                                          .attr("stroke", stroke);
+                      })*/
+                
+                
+                radarChartArea.selectAll("path.path-mark").data([dotPositions.map(d=>d[0])])
+                     .join(enter=>{enter.append("path").attr("class", `path-mark`)
+                                        .attr("d", d=>radarLineGen(d))
+                                        .attr("fill", fill)
+                                        .attr("opacity", 0.6)
+                                        .attr("stroke", stroke)
+                                        .attr("stroke-width", 0)
+                                   },
+                           update=>{update.attr("d", d=>radarLineGen(d))
+                                          .attr("fill", fill).attr("stroke", stroke)
+                           })
+                
+                tooltip.raise()
+                
+                radarChartArea.selectAll(`circle.dot-mark`).data(dotPositions)
+                     .join(enter=>{enter.append("circle")
+                                        .attr("class", d=>`dot-mark layer${getLayerId(valueList[d[1]])}`)
+                                        .attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1])
+                                        .attr("quantity", d=>valueList[d[1]])
+                                        .attr("opacity",1)
+                                        .attr("r", 5).attr("fill", stroke)
+                                        .on("mouseover", function(event){
+                                            let target = d3.select(this);
+                                            let x = target.attr("cx");
+                                            let y = target.attr("cy");
+                                            let value = Number(target.attr("quantity"));
+                                            let tip = "";
+                                            if (value > 1e-2){
+                                                tip = d3.format(".2f")(value) + " g";
+                                            } else if (value > 1e-4){
+                                                tip = d3.format(".2f")(value*1000) + " mg";
+                                            } else {
+                                                tip = d3.format(".2f")(value*1000000) + " μg";
+                                            }
 
-                radarChartArea.append("path").attr("class", `path-mark-${id}`)
-                     .attr("d", radarLineGen(dotPositions))
-                     .attr("fill", fill)
-                     .attr("opacity", 0.3)
-                     .attr("stroke", stroke)
-                     .attr("stroke-width", 2)
-            
-                radarChartArea.selectAll(`circle.dot-mark-${id}`)
-                     .data(dotPositions).join("circle").attr("class", `dot-mark-${id}`)
-                     .attr("cx", d=>d[0]).attr("cy", d=>d[1])
-                     .attr("opacity",0.5)
-                     .attr("r", 3).attr("fill", stroke);
+                                            target.transition().duration(1000).attr("r", 25).attr("fill", "transparent")
+                                            .attr("stroke","black").attr("stroke-width", 2)
+
+                                            tooltip.attr("x", x).attr("y", y).text(tip)
+                                                   .attr("opacity", 1)
+                                        })
+                                        .on("mouseout", function(){
+                                            let target = d3.select(this);
+                                            target.attr("r", 5).attr("fill", "black")
+                                            .attr("stroke-width", 0)
+                                            tooltip.attr("x", 0).attr("y", 0).text("").attr("opacity", 0)
+                                        })
+                           },
+                           update=>{update.attr("cx", d=>d[0]).attr("cy", d=>d[1])
+                                          .attr("fill", stroke);
+                      })
+                     
             }
 
-            plotData("eggplant",radarData, "brown", "black");
-            //plotData("banana", bananaData, "yellow", "black")
+            var idList = [0,1,4,5]
+
+            const requestData = async function(){
+                const nutritions = await d3.json("nutritions_preprocessed.json");
+                let selected_nutritions = nutritions.filter((item)=>idList.includes(Number(item.id)));
+
+                console.log(selected_nutritions)
+
+                let radarData = {};
+
+                selected_nutritions.forEach((sample)=>{
+                    for (let key in sample.nutritions){
+                        if (sample.nutritions[key] <= 1e-7){
+                            continue;
+                        } 
+
+                        if (radarData.hasOwnProperty(key)){
+                            radarData[key] += Number(sample.nutritions[key]);
+                        } else {
+                            radarData[key] = Number(sample.nutritions[key]);
+                        }
+                    }
+                })
+
+                for (let key in radarData){
+                    radarData[key] /= idList.length;
+                }
+
+                console.log(radarData)
+
+                plotData("meal", radarData, "red", "black");
+            }
+
+            requestData();
+
+            
         </script>
         <script>
             const barChart = d3.select("#nutrition-details");
