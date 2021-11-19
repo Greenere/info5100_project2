@@ -3,156 +3,250 @@
         <meta charset="utf-8"/>
         <title>Plate and Food</title>
         <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     </head>
     <body>
-        <svg id="plate_and_food" width=600 height=600 style="border: 1px black solid;"></svg>
+        <svg id="plate_and_food" width=600 height=600 style="border: 1px black solid;">
+          <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
+        </svg>
         <script>
-            const plateFood = d3.select("#plate_and_food");
-            const plateFoodWidth = plateFood.attr("width"); // total width
-            const plateFoodHeight = plateFood.attr("height"); // total height
-            const plateFoodMargin = {left:0, right:0, top:0, bottom:0};
 
-            // Food Menu Area
-            const foodHeight = plateFoodHeight;
-            const foodWidth = 75;
+            const plateAndFoodRegion = async () => {
+              let foodData = await d3.json("./foodList.json");
+              let foodList = foodData.data;
+              console.log(foodList);
+              const plateFood = d3.select("svg#plate_and_food");
+              const plateFoodWidth = plateFood.attr("width"); // total width
+              const plateFoodHeight = plateFood.attr("height"); // total height
+              const plateFoodMargin = {left:0, right:0, top:0, bottom:0};
 
-            // Plate Area
-            const plateHeight = plateFoodHeight;
-            const plateWidth = plateFoodWidth - foodWidth;
-            const plateRadius = 200;  // the radius of the round plate
-            const plateMargin = {left: plateWidth / 2 - plateRadius, right: plateWidth / 2 - plateRadius
-                                , top: plateHeight / 2 - plateRadius, bottom: plateHeight / 2 - plateRadius};
-            const foodMenuHeight = 40;
-            const foodListHeight = foodHeight - foodMenuHeight;
+              // Food Menu Area
+              const foodHeight = plateFoodHeight;
+              const foodWidth = 75;
 
-            // food "canvas"
-            const foodCanvas = plateFood.append("g")
+              // Plate Area
+              const plateHeight = plateFoodHeight;
+              const plateWidth = plateFoodWidth - foodWidth;
+              const plateRadius = 150;  // the radius of the round plate
+              const plateMargin = {left: plateWidth / 2 - plateRadius, right: plateWidth / 2 - plateRadius
+                                  , top: plateHeight / 3 - plateRadius, bottom: plateHeight / 2 - plateRadius};
+              const foodMenuHeight = 40;
+              const foodMenuNextIconHeight = 40;
+              const foodListHeight = foodHeight - foodMenuHeight;
+              
+              // Table Area
+              const tableHeight = 400;
+              const tableWidth = 600;
+              
+              // table "canvas"
+              const tabelCanvas = plateFood.append("g")
+                                           .attr("class", "table_canvas")
+                                           
+              const tabel = plateFood.append("image")
+                                     .attr("x", 30)
+                                     .attr("y", plateHeight / 6 - 20)
+                                     .attr("width", tableWidth + 20)
+                                     .attr("height", tableHeight + 80)
+                                     .attr("href", "./table/round-table2.png")
+              // plate "canvas"
+              const plateCanvas = plateFood.append("g")
+                                           .attr("class", "plate_canvas")
+                                           .attr("transform", `translate(${foodWidth + plateMargin.left}, ${plateMargin.top + 6})`)
+
+              const plate = plateCanvas.append("image")
+                                       .attr("x", 0)
+                                       .attr("y", 0)
+                                       .attr("width", plateRadius * 2)
+                                       .attr("height", plateRadius * 2)
+                                       .attr("href", "plates/image1448.png")
+                                       .attr("class", "plate")
+
+
+              // food "canvas"
+              let foodCanvas = plateFood.append("g")
+                                        .attr("class", "food_canvas");                        
+              // food icons
+              let foodIcons = plateFood.append("g")
+                                       .attr("class", "food_icons")
+                                       .attr("cursor", "grab")
+                                       .raise()
+
+              let foodArea = foodCanvas.append("g")
+                                       .append("rect")
+                                       .attr("x", 0)
+                                       .attr("y", 0)
+                                       .attr("width", foodWidth)
+                                       .attr("height", foodHeight)
+                                       .style("stroke", "black")
+                                       .style("stroke-width", "1")
+                                       .attr("fill", "white")
+                                       .attr("class", "food-canvas")
+
+              const foodMenu = foodCanvas.append("g")
                                         .append("rect")
                                         .attr("x", 0)
                                         .attr("y", 0)
                                         .attr("width", foodWidth)
-                                        .attr("height", foodHeight)
+                                        .attr("height", foodMenuHeight)
                                         .style("stroke", "black")
                                         .style("stroke-width", "1")
                                         .attr("fill", "white")
-                                        .attr("class", "food-canvas")
+                                        .attr("class", "food-menu")
+                                        // .attr("visibility", "")
 
-            const foodMenu = plateFood.append("g")
-                                      .append("rect")
-                                      .attr("x", 0)
-                                      .attr("y", 0)
-                                      .attr("width", foodWidth)
-                                      .attr("height", foodMenuHeight)
-                                      .style("stroke", "black")
-                                      .style("stroke-width", "1")
-                                      .attr("class", "food-menu")
-                                      .attr("visibility", "hidden")
+              const menuLabel = foodCanvas.append("text")
+                                          .attr("x", foodWidth - 6)
+                                          .attr("y", foodMenuHeight / 2 - 6)
+                                          .style("font", "bold 20px ar")
+                                          .text("MENU")
+                                          .attr("dominant-baseline", "hanging")
+                                          .attr("text-anchor", "end")
+                          
+              
+              const foodListNextIconBorder = foodCanvas.append("rect")
+                                                       .attr("x", 0)
+                                                       .attr("y", foodHeight - foodMenuNextIconHeight)
+                                                       .attr("width", foodWidth)
+                                                       .attr("height", foodMenuNextIconHeight)
+                                                       .style("stroke", "black")
+                                                       .style("stroke-width", "1")
+                                                       .attr("fill", "white");
 
-            const foodList = plateFood.append("g")
-                                      .append("rect")
-                                      .attr("x", 0)
-                                      .attr("y", foodMenuHeight)
-                                      .attr("width", foodWidth)
-                                      .attr("height", foodListHeight)
-                                      .style("stroke", "black")
-                                      .style("stroke-width", "1")
-                                      .attr("class", "food-menu")
-                                      .attr("visibility", "hidden")
-            // plate "canvas"
-            const plateCanvas = plateFood.append("g")
-                                         .attr("transform", `translate(${foodWidth + plateMargin.left}, ${plateMargin.top})`)
-            console.log(foodWidth + plateMargin.left);
-            const plateRegion = plateCanvas.append("rect")
-                                           .attr("x", 0)
-                                           .attr("y", 0)
-                                           .attr("width", plateRadius * 2)
-                                           .attr("height", plateRadius * 2)
-                                           .style("stroke", "black")
-                                           .style("stroke-width", 1)
-                                           .attr("class", "plate-region")
-                                           .attr("visibility", "hidden")
-                                          
-            const plate = plateCanvas.append("image")
-                                     .attr("x", 0)
-                                     .attr("y", 0)
-                                     .attr("width", plateRadius * 2)
-                                     .attr("height", plateRadius * 2)
-                                     .attr("href", "./plates/free-vector-plate-green-with-red-trim_102056_Plate_green_with_red_trim.png")
-                                     .attr("class", "plate")
+              // Simulation lives here
+              var foods = foodList.slice(0, 10);
+              var updateSpare = foodList.slice(10, 12)
+              console.log(foods);
+              const foodListNextIcon = foodCanvas.append("image")
+                                                 .attr("x", 0)
+                                                 .attr("y", foodHeight - foodMenuNextIconHeight + 1)
+                                                 .attr("width", foodWidth)
+                                                 .attr("height", foodMenuNextIconHeight + 2)
+                                                 .attr("href", "./nextIcons/down-arrow-svgrepo-com.svg")
+                                                 .style("cursor", "pointer")
+                                                 .on("click", function() {
+                                                   if (foodIndexRightPtr = 12) {foodIndexRightPtr %= 12;}
+                                                   if (foodIndexLeftPtr = 12) {foodIndexLeftPtr %= 12;}
+                                                   foods.unshift(updateSpare.pop());
+                                                   updateSpare.unshift(foods.pop());
+                                                   updateFoodList(foods);
+                                                 })
+
+              foodList.sort(function(d1, d2) {
+                return d1["id"] - d2["id"];
+              })                                   
+
+              function updateFoodList(foodList) {
+                foodIcons.selectAll("image.food").remove();
+                let foodElement = foodIcons.selectAll("image.food")
+                                           .data(foodList)
+                                           .join(
+                                             enter => {
+                                               enter.append("image")
+                                                    .attr("class", "food")
+                                                    .attr("href", d => d["url"])
+                                                    .attr("x", 10)
+                                                    .attr("y", (d, i) => foodMenuHeight + i * 50 + 10)
+                                                    .attr("width", 50)
+                                                    .on("mouseover", function() {
+                                                      let imageValue = d3.select(this).datum();
+                                                      let imagePos = d3.select(this);
+                                                      d3.select("#label_food")
+                                                        .attr("x", imagePos.attr("x"))
+                                                        .attr("y", imagePos.attr("y"))
+                                                        .text(imageValue.short_name)
+                                                        .raise()
+
+                                                    })
+                                                    .on("mouseout", function() {
+                                                      d3.select("#label_food")
+                                                        .text("")
+                                                    })
+                                                    .call(d3.drag()
+                                                            .on("start", dragstarted)
+                                                            .on("drag", dragged)
+                                                            .on("end", dragended));
+                                             },
+                                             update => update.attr("y", (d, i) => foodMenuHeight + i * 50 + 10),
+                                             exit => {
+                                               exit.remove();
+                                            }
+                                           )
+
+              }
+              updateFoodList(foodList.slice(0, 10))
+
+              var originX = 0;
+              var originY = 0;
+              var idSet = new Set();
+              var idList = [];
+
+              function dragstarted(d) {
+                // console.log(d["subject"]["url"])
+                // foodIcons
+                //   .append("image")
+                //   .attr("class", "food")
+                //   .attr("href", d["subject"]["url"])
+                //   .attr("x", 10)
+                //   .attr("y", d.y)
+                //   .attr("width", 50)
+                originX = d.x;
+                originY = d.y;
+                d3.select(this)
+                  .attr("width", "70")
+                  .attr("stroke-width", 3)
+                  .raise();
+                foodIcons.attr("cursor", "grabbing");
+              }
+
+              function dragged(event, d) {
+                // console.log(d);
+                // console.log(event.x);
+                // console.log(event.y);
+                // console.log(event, d)
+                // d.x = event.x;
+                // d.y = event.y;
+                // d3.select(this)
+                //   .attr("x", event.x )
+                //   .attr("y", event.y )
+                //   .raise();
+              }
+
+              function dragended(event, d) {
+                d3.select(this).attr("stroke", null)
+                               .attr("width", "50")
+                               .attr("x", updataX(originX, d))
+                               .attr("y", updataY(originY, d))
+                               .transition(200)
+
+                foodIcons.attr("cursor", "grab");
+
+                if (isInsidethePlate(d)) {
+                  idSet.add(d3.select(this).datum());
+                }
+                idList = Array.from(idSet)
+              }
+
+              function updataX(previouX, d) {
+                if (isInsidethePlate(d)) {return d.x;}
+                else {return previouX;}
+              }
+
+              function updataY(previouY, d) {
+                if (isInsidethePlate(d)) {return d.y;}
+                else {return previouY;}
+              }
+
+              function isInsidethePlate(d) {
+                return d.x >= foodWidth + plateMargin.left 
+                    && d.x <= foodWidth + plateMargin.left + plateRadius * 2
+                    && d.y >= plateMargin.top
+                    && d.y <= plateMargin.top +  plateRadius * 2;
+              }
+            }
+
             
-            
-            // const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
-            //                      (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
-            
-            // const radarRadius = radarCenter[0] - radarMargin.left;
+            plateAndFoodRegion();
 
-            // function polarToCartesian(cx, cy, radius, degree) {
-            //     const rad = degree/180*Math.PI;
-            //     const rx = radius*Math.cos(rad);
-            //     const ry = radius*Math.sin(rad);
-            //     return [cx + rx, cy + ry];
-            // }
-
-            // let radarData = {"Water":58, "Fat":15, "Protein":26, "Carbohydrates": 0, "Dietary fiber":0, "Others":100-58-15-26};
-            // let labelList = Object.keys(radarData);
-            // let valueList = Object.values(radarData);
-            // let valueMax = 100;
-            // let degreeList = labelList.map((item, index)=>index*360/labelList.length);
-
-            // const radiusScale = d3.scaleLinear().domain([0,valueMax]).range([0, radarRadius]);
-            // const degreeScale = d3.scaleOrdinal(labelList, degreeList);
-
-            // console.log(degreeList);
-
-            // // Generate ticks
-            // radar.selectAll("circle.radar-ticks").data([0.2, 0.4, 0.6, 0.8, 1].map(item=>item*valueMax))
-            //      .join("circle").attr("class", "radar-ticks")
-            //      .attr("cx", radarCenter[0]).attr("cy", radarCenter[1])
-            //      .attr("r", d=>radiusScale(d))
-            //      .attr("fill", "none").attr("stroke", "slategray")
-            //      .attr("stroke-width", 1).attr("opacity", 0.5)
-            //      .attr("stroke-dasharray", "5 5")
-            
-            // const radarLineGen = d3.line()//.curve(d3.curveCardinal.tension(0.5));
-
-            // const labelList_p = labelList.map(item=>item);
-            // labelList_p.push(labelList[0]);
-            // const valueList_p = valueList.map(item=>item);
-            // valueList_p.push(valueList[0]);
-
-            // const dotPositions = valueList_p.map((item, index)=>{
-            //     return polarToCartesian(radarCenter[0], radarCenter[1],radiusScale(item), degreeScale(labelList_p[index]));
-            // });
-            // const barEnds = valueList.map((item, index)=>{
-            //     return [polarToCartesian(radarCenter[0], radarCenter[1],radiusScale(valueMax), degreeScale(labelList[index])), labelList[index]];
-            // });
-
-            // radar.selectAll("line.label-bar")
-            //      .data(barEnds).join("line").attr("class", "label-bar")
-            //      .attr("x1", radarCenter[0]).attr("y1", radarCenter[1])
-            //      .attr("x2", d=>d[0][0]).attr("y2", d=>d[0][1])
-            //      .attr("stroke", "slategray").attr("stroke-width", 1)
-            //      .attr("stroke-dasharray", "1 2")
-
-            // radar.append("path")
-            //      .attr("d", radarLineGen(dotPositions))
-            //      .attr("fill", "lightblue")
-            //      .attr("opacity", 0.6)
-            //      .attr("stroke", "green")
-            //      .attr("stroke-width", 2)
-            
-            // radar.selectAll("circle.dot-mark")
-            //      .data(dotPositions).join("circle").attr("class", "dot-mark")
-            //      .attr("cx", d=>d[0]).attr("cy", d=>d[1])
-            //      .attr("r", 5).attr("fill", "navy");
-            
-            // radar.selectAll("text.label")
-            //      .data(barEnds).join("text").attr("class", "label")
-            //      .attr("x", d=>d[0][0]).attr("y", d=>d[0][1])
-            //      .text(d=>d[1])
-            //      .attr("dominant-baseline", "central")
-            //      .attr("text-anchor", "end")
-            //      .attr("transform", d=>`rotate(${degreeScale(d[1])}, ${d[0][0]}, ${d[0][1]})`)
 
         </script>
     </body>
