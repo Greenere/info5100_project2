@@ -56,13 +56,11 @@
                 color: grey;
                 padding: 4px 12px;
                 border: 1px solid rgba(0,0,0,0.21);
-                border-bottom: 4px solid rgba(0,0,0,0.21);
                 border-radius: 4px;
-                background:linear-gradient(rgb(250, 250, 115) 0%, rgb(253, 229, 132) 100%)
             }
             .reset-btn:hover{
                 cursor: pointer;
-                border: 2px solid rgba(0,0,0,0.21);
+                font-weight: bold;
             }
         </style>
     </head>
@@ -75,18 +73,15 @@
             Team member: Haoyang Li (hl2425) , Yuhao Lu (yl3539) , Yue Wang (yw2359) , Yue Zhao (yz2697)<br/><br/>
             Please draft a meal by dragging foods from the menu onto the plate and check 
             the nutrition facts of this meal (measured by 100g) and look for the state where 
-            this meal can be most easily composed.
+            this meal can be most easily composed.<br/><br/>
+            <span  class="reset-btn"> RESET</span>
         </p>
         </div>
-        <br/>
         <div class="centered">
             <div class="svg-1">
                 <svg id="plate_and_food" width=500 height=500 style="border: 0px black solid;">
                     <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
                 </svg>
-            </div>
-            <div class="btn">
-                <button class="reset-btn">RESET</button>
             </div>
             <div>
                 <svg id="nutrition-radar" width=600 height=500 style="border: 0px black solid;"></svg><br/><br/>
