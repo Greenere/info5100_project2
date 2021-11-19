@@ -12,13 +12,67 @@
                 stroke:silver;
                 opacity: 0.2;
             }
+            .centered{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            * {
+               font-family: "Century Gothic";
+            }
+
+            body{
+                background-color: blanchedalmond;
+            }
+
+            text.inscription{
+                font-weight: bold;
+                fill:slategray;
+                opacity: 0.5;
+            }
+
+            text.subtitle{
+                font-weight: bolder;
+                fill:slategray;
+            }
+
+            .title{
+                font-weight: bolder;
+                color:rgb(247, 160, 10);
+                opacity: 0.7;
+            }
+
+            .description{
+                font-family: 'Lucida Sans';
+                font-weight: 400;
+                color:crimson;
+            }
         </style>
     </head>
     <body>
-        <svg id="plate_and_food" width=600 height=600 style="border: 0px black solid;">
+        <div class="centered">
+            <h1 class="title">ONLINE KITCHEN - DESIGN YOUR OWN MEAL!</h1>
+            
+        </div><br/>
+        <div class="centered description">
+        <p style="width:1000px">
+            Please draft a meal by dragging foods from the menu onto the plate and check 
+            the nutrition facts of this meal (measured by 100g) and look for the state where 
+            this meal can be most easily composed.
+        </p>
+        </div>
+        <br/>
+        <div class="centered">
+            <div>
+                <svg id="plate_and_food" width=500 height=500 style="border: 0px black solid;">
             <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
-        </svg>
-        <svg id="nutrition-radar" width=600 height=600 style="border: 0px black solid;"></svg><br/><br/>
+             </svg>
+             </div>
+             <div>
+            <svg id="nutrition-radar" width=600 height=500 style="border: 0px black solid;"></svg><br/><br/>
+        </div>
+        </div>
         <svg id="productionmap" height="800" width="1600"></svg>
         <script>
             var idSet = new Set();
@@ -27,7 +81,7 @@
             const radar = d3.select("#nutrition-radar");
             const radarWidth = Number(radar.attr("width"));
             const radarHeight = Number(radar.attr("height"));
-            const radarMargin = {left:160, right:100, top:100, bottom:100};
+            const radarMargin = {left:100, right:160, top:100, bottom:100};
 
             const radarCenter = [(radarWidth-radarMargin.left - radarMargin.right)/2 + radarMargin.left,
                                  (radarHeight-radarMargin.top - radarMargin.bottom)/2 + radarMargin.top];
@@ -55,6 +109,7 @@
             const radiusScale = d3.scaleLog().domain([1e-7,valueMax]).range([0, radarRadius]);
             const tickScale = d3.scaleSequential().domain([-2, 6]).range(["#fcfceb", "#f7a00a"])
             const tickValues = [100, 10, 1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6];
+            const legendTickSize = radarHeight/13;
 
             function getLayerId(value){
                 for (let i = 0; i < tickValues.length; i++){
@@ -87,10 +142,16 @@
                        .attr("stroke-width", 0).attr("opacity", 1)
                        .attr("stroke-dasharray", "5 5")
             
+            radarLegends.append("text").attr("class", "subtitle")
+                        .attr("x", radarCenter[0]).attr("y", radarMargin.top/5)
+                        .attr("dominant-baseline", "central").attr("text-anchor", "middle")
+                        .text("NUTRITION RADAR")
+            
             radarLegends.selectAll("rect.legend-ticks").data(tickValues)
                             .join("rect").attr("class", "legend-ticks")
-                            .attr("y", d=>-Math.log10(d)*20 + radarHeight/2 - 80).attr("x", 10)
-                            .attr("width", 20).attr("height", 20)
+                            .attr("y", d=>-Math.log10(d)*legendTickSize + 4*legendTickSize)
+                            .attr("x", radarWidth - radarMargin.right*0.6)
+                            .attr("width", 20).attr("height", legendTickSize)
                             .attr("layer", d=>getLayerId(d))
                             .attr("fill", d=>tickScale(-Math.log10(d)))
                             .attr("active", 0)
@@ -118,11 +179,12 @@
             
             radarLegends.selectAll("text.legend-ticks").data(tickValues)
                         .join("text").attr("class", "legend-ticks")
-                        .attr("y", d=>-Math.log10(d)*20 + radarHeight/2-80 + 12).attr("x", 10 + 25)
+                        .attr("y", d=>-Math.log10(d)*legendTickSize  + 4*legendTickSize+ legendTickSize/2)
+                        .attr("x", radarWidth - radarMargin.right*0.6 + 25)
                         .attr("dominant-baseline", "central")
                         .attr("text-anchor", "start")
                         .attr("font-size", "8px")
-                        .text(d=>`~ ${valueToTip(d)}`)
+                        .text(d=>`${valueToTip(d/10)} ~ ${valueToTip(d)}`)
             
             const tooltip = radarChartArea.append("text").attr("id", "tooltip").text("")
                                         .attr("text-anchor","middle").attr("dominant-baseline", "central")
@@ -279,50 +341,65 @@
 
               // Food Menu Area
               const foodHeight = plateFoodHeight;
-              const foodWidth = 75;
+              const foodWidth = 55;
+              const iconSize = foodHeight/13;
 
               // Plate Area
               const plateHeight = plateFoodHeight;
               const plateWidth = plateFoodWidth - foodWidth;
-              const plateRadius = 150;  // the radius of the round plate
+              const plateRadius = plateWidth*0.4;  // the radius of the round plate
               const plateMargin = {left: plateWidth / 2 - plateRadius, right: plateWidth / 2 - plateRadius
                                   , top: plateHeight / 3 - plateRadius, bottom: plateHeight / 2 - plateRadius};
-              const foodMenuHeight = 40;
+              const foodMenuHeight = iconSize;
               const foodMenuNextIconHeight = 40;
               const foodListHeight = foodHeight - foodMenuHeight;
               
               const plateCanvas = plateFood.append("g")
                                            .attr("class", "plate_canvas")
-                                           .attr("transform", `translate(${foodWidth + plateMargin.left}, ${plateMargin.top + 6})`)
+                                           .attr("transform", `translate(${foodWidth + plateWidth/2},
+                                                                         ${plateHeight/2})`)
 
 
               plateCanvas.append("circle")
                           .style("stroke", "lightgrey")
                           .style("stroke-width", 5)
                           .style("fill", "white")
-                          .attr("r", 200)
-                          .attr("cx", 140)
-                          .attr("cy", 250)
+                          .attr("r", plateRadius)
+                          .attr("cx", 0)
+                          .attr("cy", 0)
                           .attr("class", "plate")
               plateCanvas.append("circle")
                           .style("stroke", "ivory")
                           .style("fill", "lightgray")
                           .attr("opacity", 0.7)
-                          .attr("r", 115)
-                          .attr("cx", 140)
-                          .attr("cy", 250)
+                          .attr("r", plateRadius*0.5)
+                          .attr("cx", 0)
+                          .attr("cy", 0)
               plateCanvas.append("circle")
                           .style("stroke", "ivory")
                           .style("fill", "ivory")
-                          .attr("r", 110)
-                          .attr("cx", 140)
-                          .attr("cy", 250)
+                          .attr("r", plateRadius*0.5 -5)
+                          .attr("cx", 0)
+                          .attr("cy", 0)
               plateCanvas.append("circle")
                           .style("stroke", "ivory")
                           .style("fill", "white")
-                          .attr("r", 100 )
-                          .attr("cx", 140)
-                          .attr("cy", 250)
+                          .attr("r", plateRadius*0.5-10)
+                          .attr("cx", 0)
+                          .attr("cy", 0)
+            
+              plateCanvas.append("text").attr("class", "inscription")
+                        .attr("x", 0).attr("y", -20)
+                        .attr("dominant-baseline", "central").attr("text-anchor", "middle")
+                        .text("DRAG")
+               plateCanvas.append("text").attr("class", "inscription")
+                        .attr("x", 0).attr("y", 0)
+                        .attr("dominant-baseline", "central").attr("text-anchor", "middle")
+                        .text("FOODS")
+               plateCanvas.append("text").attr("class", "inscription")
+                        .attr("x", 0).attr("y", 20)
+                        .attr("dominant-baseline", "central").attr("text-anchor", "middle")
+                        .text("HERE")
 
 
               // food "canvas"
@@ -334,36 +411,45 @@
                                        .attr("cursor", "grab")
                                        .raise()
 
-              let foodArea = foodCanvas.append("g")
+              /*let foodArea = foodCanvas.append("g")
                                        .append("rect")
                                        .attr("x", 0)
                                        .attr("y", 0)
                                        .attr("width", foodWidth)
-                                       .attr("height", foodHeight)
-                                       .style("stroke", "black")
-                                       .style("stroke-width", "1")
+                                       .attr("height", foodHeight*1.1)
+                                       .style("stroke", "slategray")
+                                       .style("stroke-width", 2)
                                        .attr("fill", "white")
-                                       .attr("class", "food-canvas")
+                                       .attr("class", "food-canvas")*/
+              foodCanvas.append("line").attr("x1", 0).attr("y1", foodMenuHeight)
+                        .attr("x2", 0).attr("y2", foodHeight)
+                        .attr("stroke", "slategray").attr("stroke-width", 5)
+              
+              foodCanvas.selectAll("line.food-pin").data([1,2,3,4,5,6,7,8,9,10,11,12])
+                        .join("line").attr("class", "food-pin")
+                        .attr("x1", 0).attr("y1", d=>d*iconSize + iconSize*0.8)
+                        .attr("x2", iconSize).attr("y2", d=>d*iconSize + iconSize*0.8)
+                        .attr("stroke", "slategray").attr("stroke-width", 4)
 
-              const foodMenu = foodCanvas.append("g")
+              /*const foodMenu = foodCanvas.append("g")
                                         .append("rect")
                                         .attr("x", 0)
                                         .attr("y", 0)
                                         .attr("width", foodWidth)
                                         .attr("height", foodMenuHeight)
                                         .style("stroke", "black")
-                                        .style("stroke-width", "1")
+                                        .style("stroke-width", 0)
                                         .attr("fill", "white")
                                         .attr("class", "food-menu")
-                                        // .attr("visibility", "")
+                                        // .attr("visibility", "")*/
 
               const menuLabel = foodCanvas.append("text")
-                                          .attr("x", foodWidth - 6)
-                                          .attr("y", foodMenuHeight / 2 - 6)
-                                          .style("font", "bold 20px ar")
+                                          .attr("x", 0)
+                                          .attr("y", foodMenuHeight / 2)
+                                          .attr("class", "subtitle")
                                           .text("MENU")
-                                          .attr("dominant-baseline", "hanging")
-                                          .attr("text-anchor", "end")
+                                          .attr("dominant-baseline", "central")
+                                          .attr("text-anchor", "start")
                           
               // mouseover canvas
               let mouseover = plateFood.append("g").attr("class", "mouseover") 
@@ -404,17 +490,19 @@
                                                     .attr("class", "food")
                                                     .attr("href", d => d["url"])
                                                     .attr("x", 10)
-                                                    .attr("y", (d, i) => foodMenuHeight + i * 50 + 10)
+                                                    .attr("y", (d, i) => foodMenuHeight + i * iconSize)
                                                     .attr("originX",10)
-                                                    .attr("originY",(d, i) => foodMenuHeight + i * 50 + 10)
-                                                    .attr("width", 50)
+                                                    .attr("originY",(d, i) => foodMenuHeight + i * iconSize)
+                                                    .attr("width", iconSize)
                                                     .on("mouseover", function() {
                                                       let imageValue = d3.select(this).datum();
                                                       let imagePos = d3.select(this);
                                                       d3.select("#label_food")
-                                                        .attr("x", imagePos.attr("x"))
-                                                        .attr("y", imagePos.attr("y"))
+                                                        .attr("x", Number(imagePos.attr("x")) + iconSize*1.1)
+                                                        .attr("y", Number(imagePos.attr("y")) + iconSize*0.2)
                                                         .text(imageValue.short_name)
+                                                        .attr("dominant-baseline", "central")
+                                                        .attr("text-anchor", "start")
                                                         .raise()
                                                     })
                                                     .on("mouseout", function() {
@@ -442,7 +530,7 @@
 
               function dragstarted(event, d) {
                 d3.select(this)
-                  .attr("width", "70")
+                  .attr("width", iconSize*1.5)
                   .attr("stroke-width", 3)
                   .raise();
                 foodIcons.attr("cursor", "grabbing");
@@ -452,8 +540,8 @@
 
                 
                 if (!d.first) {
-                  let curx = event.x - 35;
-                  let cury = event.y - 35;
+                  let curx = event.x - iconSize*1.5/2;
+                  let cury = event.y - iconSize*1.5/2;
                   d3.select(this)
                   .attr("x", (d.x = curx))
                   .attr("y", (d.y = cury))
@@ -470,7 +558,7 @@
 
               function dragended(event, d) {
                 foodIcons.attr("cursor", "grab");
-                d3.select(this).attr("width", "50")
+                d3.select(this).attr("width", iconSize)
                 if (isInsidethePlate(d)) {
                   d3.select(this).attr("class", "on-plate")
                   idList.push(d3.select(this).datum())
@@ -479,6 +567,7 @@
                   let originX = d3.select(this).attr('originX')
                   let originY = d3.select(this).attr('originY')
                   d3.select(this).attr('x', originX).attr('y',originY).attr("class","food")
+                  .attr("width", iconSize)
                   d.x = originX
                   d.y = originY
                 }
