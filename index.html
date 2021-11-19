@@ -27,6 +27,7 @@
             }
 
             text.inscription{
+                font-family: "Lucida Handwriting";
                 font-weight: bold;
                 fill:slategray;
                 opacity: 0.5;
@@ -47,16 +48,17 @@
                 font-family: 'Lucida Sans';
                 font-weight: 400;
                 color:crimson;
+                font-weight: bold;
             }
         </style>
     </head>
     <body>
         <div class="centered">
             <h1 class="title">ONLINE KITCHEN - DESIGN YOUR OWN MEAL!</h1>
-            
         </div><br/>
         <div class="centered description">
-        <p style="width:1000px">
+        <p style="width:1100px">
+            Team member: Haoyang Li (hl2425) , Yuhao Lu (yl3539) , Yue Wang (yw2359) , Yue Zhao (yz2697)<br/><br/>
             Please draft a meal by dragging foods from the menu onto the plate and check 
             the nutrition facts of this meal (measured by 100g) and look for the state where 
             this meal can be most easily composed.
@@ -73,7 +75,14 @@
             <svg id="nutrition-radar" width=600 height=500 style="border: 0px black solid;"></svg><br/><br/>
         </div>
         </div>
-        <svg id="productionmap" height="800" width="1600"></svg>
+        <div class="centered description">
+            <p style="width:1100px">
+                The distribution map of productions is shown below.
+            </p>
+            </div>
+        <div class="centered">
+             <svg id="productionmap" height="800" width="1100"></svg>
+        </div>
         <script>
             var idSet = new Set();
             var idList = [];
@@ -602,13 +611,12 @@
               }
 
 
-            var svgWidth = 1200;
-            var svgHeight = 800;
+            //production map
 
             var svg = d3.select("svg#productionmap")
-                        .append("svg")
-                        .attr("width",svgWidth)
-                        .attr("height",svgHeight);
+
+            var svgWidth = svg.attr("width")
+            var svgHeight = svg.attr("height");
             
         
             var margin = {top: 10, right: 10, bottom: 70, left: 50};
@@ -638,8 +646,6 @@
             })
             us = us.filter((data)=>!['AK','HI','CNMI','GU', 'PR','USVI'].includes(data.Abb))
 
-            console.log(us)
-
             let category = "Chicken_per"
 
             let foodIdMap = {
@@ -665,7 +671,7 @@
             //const longiScale = d3.scaleLinear().domain(longiExtent).range([0,chartWidth]);
 
             //const chickenExtent = d3.extent(us, d => d[category]);
-            const chickenScale = d3.scaleSequential([2, 0],d3.interpolateBlues);
+            const mapColorScale = d3.scaleSequential([0,100],d3.interpolateBlues);
 
             let bottomAxis = d3.axisBottom(longiScale)
                             //.tickFormat(d3.format(""));  // exact value without commas
@@ -694,26 +700,32 @@
                 chartArea.selectAll("circle")
                 .data(us)
                 .join(enter=>{
-                    enter.append("circle")
+                    enter.append("circle").transition()
                    .attr("cx", d => longiScale(d['longitude']))
                 .attr("cy", d => latiScale(d['latitude']))
                 .attr("r", 20)
                 .attr("fill", d=>{
+                    if(!idList.length){
+                        return 'white'
+                    }
                     let sum = 0;
                     idList.forEach((item)=>{
                         sum += d[foodIdMap[Number(item.id)]]
                     })
-                    return chickenScale(sum/idList.length)
+                    return mapColorScale(sum)
                 })
                 .attr("opacity", "1")
                 .attr("stroke", "black")
                 .attr("stroke-width", 2)},
-                update=>update.attr("fill", d=>{
+                update=>update.transition().attr("fill", d=>{
+                    if(!idList.length){
+                        return 'white'
+                    }
                     let sum = 0;
                     idList.forEach((item)=>{
                         sum += d[foodIdMap[Number(item.id)]]
                     })
-                    return chickenScale(-Math.log10(sum/idList.length))
+                    return mapColorScale(sum)
                 }).attr("opacity", 1)
                 )
 
@@ -727,10 +739,9 @@
                         .attr("alignment-baseline", "central")
                         .attr("text-anchor", "middle");
                 
-                if (idList.length < 1){
-                    chartArea.selectAll("circle").attr("opacity", 0)
-                }
                }
+               // initial food map
+               updateMap([])
             }
 
             //Need to enter state abbreviations  
