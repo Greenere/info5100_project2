@@ -15,7 +15,9 @@
         </style>
     </head>
     <body>
-        <svg id="plate_and_food" width=600 height=600 style="border: 0px black solid;"></svg>
+        <svg id="plate_and_food" width=600 height=600 style="border: 0px black solid;">
+            <text id="label_food" text-anchor="start" alignment-baseline="hanging"></text>
+        </svg>
         <svg id="nutrition-radar" width=600 height=600 style="border: 0px black solid;"></svg><br/><br/>
         <svg id="productionmap" height="800" width="1600"></svg>
         <script>
@@ -318,7 +320,7 @@
               plateCanvas.append("circle")
                           .style("stroke", "ivory")
                           .style("fill", "white")
-                          .attr("r", 100)
+                          .attr("r", 100 )
                           .attr("cx", 140)
                           .attr("cy", 250)
 
@@ -499,6 +501,11 @@
               }
 
               function isInsidethePlate(d) {
+                console.log(foodWidth + plateMargin.left);
+                // return d.x >= 140 - plateRadius
+                //     && d.x <= 140 + plateRadius
+                //     && d.y >= 250 - plateRadius
+                //     && d.y <= 250 + plateRadius;
                 return d.x >= foodWidth + plateMargin.left 
                     && d.x <= foodWidth + plateMargin.left + plateRadius * 2
                     && d.y >= plateMargin.top
@@ -631,7 +638,7 @@
                         .attr("alignment-baseline", "central")
                         .attr("text-anchor", "middle");
                 
-                        if (idList.length < 1){
+                if (idList.length < 1){
                     chartArea.selectAll("circle").attr("opacity", 0)
                 }
                }
