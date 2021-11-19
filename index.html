@@ -704,7 +704,10 @@
             .call(leftGridlines);
 
             function updateMap(idList){
-                
+                let idSet = new Set()
+                idList.forEach((e)=>{
+                    idSet.add(e.id)
+                })
                 chartArea.selectAll("circle")
                 .data(us)
                 .join(enter=>{
@@ -713,12 +716,12 @@
                 .attr("cy", d => latiScale(d['latitude']))
                 .attr("r", 20)
                 .attr("fill", d=>{
-                    if(!idList.length){
+                    if(!idSet.length){
                         return 'white'
                     }
                     let sum = 0;
-                    idList.forEach((item)=>{
-                        sum += d[foodIdMap[Number(item.id)]]
+                    idSet.forEach((id)=>{
+                        sum += d[foodIdMap[Number(id)]]
                     })
                     return mapColorScale(sum)
                 })
@@ -730,11 +733,19 @@
                         return 'white'
                     }
                     let sum = 0;
-                    idList.forEach((item)=>{
-                        sum += d[foodIdMap[Number(item.id)]]
+                    idSet.forEach((id)=>{
+                        sum += d[foodIdMap[Number(id)]]
                     })
                     return mapColorScale(sum)
                 }).attr("opacity", 1)
+                .attr("r", (d)=>{
+                    d.radius = 20
+                    for(let id of idSet){
+                        let food = foodIdMap[id]
+                        d.radius = d[food] ? d.radius+7 : d.radius
+                    }
+                    return d.radius
+                })
                 )
 
                 chartArea.selectAll("text")
