@@ -23,7 +23,7 @@
             }
 
             body{
-                background-color: blanchedalmond;
+                background-color: ivory;
             }
 
             text.inscription{
@@ -116,7 +116,7 @@
 
             const valueMax = 100;
             const radiusScale = d3.scaleLog().domain([1e-7,valueMax]).range([0, radarRadius]);
-            const tickScale = d3.scaleSequential().domain([-2, 6]).range(["#fcfceb", "#f7a00a"])
+            const tickScale = d3.scaleSequential().domain([-2, 6]).range(["#fefae0", "#f7a00a"])
             const tickValues = [100, 10, 1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6];
             const legendTickSize = radarHeight/13;
 
@@ -192,7 +192,7 @@
                         .attr("x", radarWidth - radarMargin.right*0.6 + 25)
                         .attr("dominant-baseline", "central")
                         .attr("text-anchor", "start")
-                        .attr("font-size", "8px")
+                        .attr("font-size", "7px")
                         .text(d=>`${valueToTip(d/10)} ~ ${valueToTip(d)}`)
             
             const tooltip = radarChartArea.append("text").attr("id", "tooltip").text("")
