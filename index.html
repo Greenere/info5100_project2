@@ -47,9 +47,11 @@
 
             .description{
                 font-family: 'Lucida Sans';
+                font-size: 20px;
                 font-weight: 400;
                 color:#91684A;
                 font-weight: bold;
+                text-align: justify;
             }
 
             .reset-btn{
@@ -73,9 +75,18 @@
         <div class="centered description">
         <p style="width:1100px">
             Team member: Haoyang Li (hl2425) , Yuhao Lu (yl3539) , Yue Wang (yw2359) , Yue Zhao (yz2697)<br/><br/>
-            Please draft a meal by dragging foods from the menu onto the plate and check 
-            the nutrition facts of this meal (measured by 100g) and look for the state where 
-            this meal can be most easily composed.<br/><br/>
+            Please draft a meal using foods provided by the menu and check 
+            the nutrition facts of this meal (per 100-gram) and look for the state where 
+            this meal can be most easily composed.
+            <br/>
+            <br/>
+            To select a food, just drag an icon from the menu and place it onto the plate.
+            If you want to remove it, just drag it out of the plate and it will get pulled back 
+            to the original place.
+            You can mouse over each data dot on the radar chart to inspect the exact equivalent value 
+            of corresponding nutrition components for the meal you drafted. You can also mouse over
+            each tick of the legend to highlight data dots that fall into the corresponding value range.
+            <br/><br/>
             <span  class="reset-btn"> RESET</span>
         </p>
         </div>
@@ -90,13 +101,24 @@
             </div>
         </div>
         <div class="centered description">
+            <br/>
             <p style="width:1100px">
-                The distribution map of productions is shown below.
-            </p>
+                A production-by-state distribution "map" of America is shown below. You can mouseover 
+                data dots to inspect state names. For any selected food 
+                that the state has a good portion of its total production, the state "grows" by a unit.
+                Find the largest state, it produces all components of your meal!
+            </p><br/>
             </div>
         <div class="centered">
-             <svg id="productionmap" height="800" width="1100"></svg>
+             <svg id="productionmap" height="800" width="1100">
+                 <text id="label_map" class="inscription" text-anchor="start" alignment-baseline="hanging"></text>
+             </svg>
         </div>
+        <div class="centered description">
+            <p style="width:1100px">
+                How is your experience with our online kitchen ? Welcome next time!
+            </p><br/>
+            </div>
         <script>
             var idSet = new Set();
             var idList = [];
@@ -366,7 +388,7 @@
 
               // Food Menu Area
               const foodHeight = plateFoodHeight;
-              const foodWidth = 55;
+              const foodWidth = 50;
               const iconSize = foodHeight/13;
 
               // Plate Area
@@ -461,27 +483,6 @@
               
               var foods = foodList.slice(0, 12);
               var updateSpare = foodList.slice(10, 12)
-
-              // Next Icon => click to slow the next list
-
-            //   console.log(foods);
-            //   const foodListNextIcon = foodCanvas.append("image")
-            //                                      .attr("x", 0)
-            //                                      .attr("y", foodHeight - foodMenuNextIconHeight + 1)
-            //                                      .attr("width", foodWidth)
-            //                                      .attr("height", foodMenuNextIconHeight + 2)
-            //                                      .style("cursor", "pointer")
-            //                                      .on("click", function() {
-            //                                        foods.unshift(updateSpare.pop());
-            //                                        updateSpare.unshift(foods.pop());
-            //                                        foods.forEach((item)=>{
-            //                                          if(idSet.has(item)){
-            //                                           item.url = ''
-            //                                          }
-            //                                        })
-
-            //                                        updateFoodList(foods);
-            //                                      })
 
               foodList.sort(function(d1, d2) {
                 return d1["id"] - d2["id"];
@@ -623,7 +624,7 @@
             let mapHeight = productionMap.attr("height");
             
         
-            let mapMargin = {top: 10, right: 10, bottom: 70, left: 50};
+            let mapMargin = {top: 0, right: 0, bottom: 50, left: 0};
             
             let mapChartWidth = mapWidth - mapMargin.left - mapMargin.right;
             let mapChartHeight = mapHeight - mapMargin.top - mapMargin.bottom;
@@ -658,11 +659,9 @@
             const longiScale = d3.scaleLinear().domain([130,65]).range([0,mapChartWidth]);
 
             const mapColor = "rgb(247, 160, 10)";
-            const initialDotSize = 5;
-            const dotStepSize = 7;
+            const initialDotSize = 10;
+            const dotStepSize = 10;
 
-            let bottomAxis = d3.axisBottom(longiScale)
-                            //.tickFormat(d3.format(""));  // exact value without commas
             let bottomGridlines = d3.axisBottom(longiScale)
                                     .tickSize(-mapChartHeight-10)
                                     .tickFormat("")
@@ -689,7 +688,32 @@
                 mapChartArea.selectAll("circle")
                         .data(us)
                         .join(enter=>{
-                            enter.append("circle").attr("opacity", 0)
+                            enter.append("circle")
+                                .on("mouseover",function(event,d){
+                                    d3.select("#label_map")
+                                        .attr("x",mapChartWidth*0.1)
+                                        .attr("y",mapChartHeight*0.9)
+                                        .text(d.state.toLowerCase().replace(/( |^)[a-z]/g, function(s){
+                                            return s.toUpperCase()
+                                        }))
+                                        .style("font-size",40)
+                                        .raise();
+                                    d3.select(this)
+                                        .transition()
+                                        .duration(250)
+                                        .attr("stroke-width","4")
+                                        .attr("opacity", "0.6");
+                                })
+                                .on("mouseout", function(event,d){
+                                    d3.select("#label_map")
+                                        .text("");
+                                    d3.select(this)
+                                        .transition()
+                                        .duration(250)
+                                        .attr("stroke-width","1")
+                                        .attr("opacity","0.5")
+                                })
+                                .attr("opacity", 0)
                                 .attr("cx", d => longiScale(d['longitude']))
                                 .attr("cy", d => latiScale(d['latitude']))
                                 .transition()
@@ -706,18 +730,21 @@
                                                     d.radius = d[food] ? d.radius+dotStepSize : d.radius
                                                 }
                                                 return d.radius
-                                            })
+                                            }),
+                            exit=>{
+                                exit.remove()
+                            }
                             )
 
-                mapChartArea.selectAll("text")
+                /*mapChartArea.selectAll("text")
                          .data(us)
                          .join("text")
                          .text(d => d.Abb)
                          .attr("x", d => longiScale(d['longitude']))
                          .attr("y", d => latiScale(d['latitude']))
-                         .attr("font-size", "0px")
+                         .attr("font-size", "5px")
                          .attr("alignment-baseline", "central")
-                         .attr("text-anchor", "middle");
+                         .attr("text-anchor", "middle");*/
                 
                }
                // initial food map
