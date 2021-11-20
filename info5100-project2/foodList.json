@@ -1,0 +1,63 @@
+{
+  "data": [
+    {
+      "short_name": "Beef",
+      "id": 2,
+      "url": "icons/protein/icons8-beef-80.png"
+    },
+    {
+      "short_name": "Chicken",
+      "id": 0,
+      "url": "icons/protein/icons8-chicken-80.png"
+    },
+    {
+      "short_name": "Carrots",
+      "id": 3,
+      "url": "icons/vegetable/icons8-carrot-80.png"
+    },
+    {
+      "short_name": "Tomatoes",
+      "id": 5,
+      "url": "icons/vegetable/icons8-tomato-80.png"
+    },
+    {
+      "short_name": "Peppers",
+      "id": 8,
+      "url": "icons/vegetable/icons8-chilli-80.png"
+    },
+    {
+      "short_name": "Sweet potato",
+      "id": 9,
+      "url": "icons/vegetable/icons8-sweet-potato-80.png"
+    },
+    {
+      "short_name": "Cucumber",
+      "id": 7,
+      "url": "icons/vegetable/icons8-cucumber-80.png"
+    },
+    {
+      "short_name": "Sweet corn",
+      "id": 6,
+      "url": "icons/vegetable/icons8-corn-80.png"
+    },
+    {
+      "short_name": "Lettuces",
+      "id": 4,
+      "url": "icons/vegetable/icons8-lettuce-80.png"
+    },
+    {
+      "short_name": "Apples",
+      "id": 10,
+      "url": "icons/fruit/icons8-apple-80.png"
+    },
+    {
+      "short_name": "Grapes",
+      "id": 11,
+      "url": "icons/fruit/icons8-grapes-80.png"
+    },
+    {
+      "short_name": "Turkey",
+      "id": 1,
+      "url": "icons/protein/icons8-thanksgiving-80.png"
+    }
+  ]}
