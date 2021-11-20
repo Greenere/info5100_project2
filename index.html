@@ -35,19 +35,20 @@
 
             text.subtitle{
                 font-weight: bolder;
-                fill:slategray;
+                fill:#91684A;
             }
 
             .title{
                 font-weight: bolder;
-                color:rgb(247, 160, 10);
+                color:#493323;
                 opacity: 0.7;
+                font-size: xx-large;
             }
 
             .description{
                 font-family: 'Lucida Sans';
                 font-weight: 400;
-                color:crimson;
+                color:#91684A;
                 font-weight: bold;
             }
 
@@ -56,17 +57,18 @@
                 color: grey;
                 padding: 4px 12px;
                 border: 1px solid rgba(0,0,0,0.21);
-                border-radius: 4px;
+                border-radius: 5px;
             }
             .reset-btn:hover{
                 cursor: pointer;
-                font-weight: bold;
+                border-radius: 2px;
+                color: black;
             }
         </style>
     </head>
     <body>
         <div class="centered">
-            <h1 class="title">ONLINE KITCHEN - DESIGN YOUR OWN MEAL!</h1>
+            <p class="title">ONLINE KITCHEN - DESIGN YOUR OWN MEAL!</p>
         </div><br/>
         <div class="centered description">
         <p style="width:1100px">
@@ -214,7 +216,7 @@
 
             let radarLineGen = d3.line().curve(d3.curveCardinalClosed.tension(0.9));
 
-            function plotData(data, fill, stroke){
+            function plotRadarData(data, fill, stroke){
                 let labelList = Object.keys(data);
                 let valueList = Object.values(data);
 
@@ -284,7 +286,6 @@
                                                     .attr("quantity", d=>valueList[d[1]])
                                                     .attr("opacity",0)
                                                     .attr("active", 0)
-                                                    .attr("r", 5).attr("fill", stroke)
                                                     .on("mouseover", function(event){
                                                         let target = d3.select(this);
                                                         let x = target.attr("cx");
@@ -316,7 +317,8 @@
                                                         target.attr("active", 0).attr("r", 5).attr("fill", stroke).attr("stroke-width", 0)
                                                         tooltip.attr("opacity", 0)
                                                     })
-                                    dot.transition().attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1]).attr("opacity", 1)
+                                    dot.attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1]).transition()
+                                       .attr("r", 5).attr("fill", stroke).attr("opacity", 1)
                                     })
                                         
                            },
@@ -327,7 +329,7 @@
                      
             }
 
-            function updateView(nutritions, idList){
+            function updateRadarChart(nutritions, idList){
                 let selected_nutritions = nutritions.filter((item)=>idList.includes(Number(item.id)));
 
                 let radarData = {};
@@ -346,7 +348,7 @@
                     }
                 })
 
-                plotData(radarData, "red", "black");
+                plotRadarData(radarData, "red", "black");
             }
 
 
@@ -432,16 +434,6 @@
                                        .attr("cursor", "grab")
                                        .raise()
 
-              /*let foodArea = foodCanvas.append("g")
-                                       .append("rect")
-                                       .attr("x", 0)
-                                       .attr("y", 0)
-                                       .attr("width", foodWidth)
-                                       .attr("height", foodHeight*1.1)
-                                       .style("stroke", "slategray")
-                                       .style("stroke-width", 2)
-                                       .attr("fill", "white")
-                                       .attr("class", "food-canvas")*/
               foodCanvas.append("line").attr("x1", 0).attr("y1", foodMenuHeight)
                         .attr("x2", 0).attr("y2", foodHeight)
                         .attr("stroke", "slategray").attr("stroke-width", 5)
@@ -452,18 +444,6 @@
                         .attr("x2", iconSize).attr("y2", d=>d*iconSize + iconSize*0.8)
                         .attr("stroke", "slategray").attr("stroke-width", 4)
 
-              /*const foodMenu = foodCanvas.append("g")
-                                        .append("rect")
-                                        .attr("x", 0)
-                                        .attr("y", 0)
-                                        .attr("width", foodWidth)
-                                        .attr("height", foodMenuHeight)
-                                        .style("stroke", "black")
-                                        .style("stroke-width", 0)
-                                        .attr("fill", "white")
-                                        .attr("class", "food-menu")
-                                        // .attr("visibility", "")*/
-
               const menuLabel = foodCanvas.append("text")
                                           .attr("x", 0)
                                           .attr("y", foodMenuHeight / 2)
@@ -471,6 +451,7 @@
                                           .text("MENU")
                                           .attr("dominant-baseline", "central")
                                           .attr("text-anchor", "start")
+                                          .attr("font-size", "15px")
                           
               // mouseover canvas
               let mouseover = plateFood.append("g").attr("class", "mouseover") 
@@ -602,7 +583,7 @@
                 if (!isInsidethePlate(d)) {
                   idList = idList.filter(item=>item.id != d3.select(this).datum().id)
                 }
-                updateView(nutritions, idList.map((item)=>item.id));
+                updateRadarChart(nutritions, idList.map((item)=>item.id));
                 updateMap(idList);
               }
 
@@ -635,40 +616,25 @@
 
             //production map
 
-            var svg = d3.select("svg#productionmap")
+            let productionMap = d3.select("svg#productionmap")
 
-            var svgWidth = svg.attr("width")
-            var svgHeight = svg.attr("height");
+            let mapWidth = productionMap.attr("width")
+            let mapHeight = productionMap.attr("height");
             
         
-            var margin = {top: 10, right: 10, bottom: 70, left: 50};
+            let mapMargin = {top: 10, right: 10, bottom: 70, left: 50};
             
-            var chartWidth = svgWidth - margin.left - margin.right;
-            var chartHeight = svgHeight - margin.top - margin.bottom;
+            let mapChartWidth = mapWidth - mapMargin.left - mapMargin.right;
+            let mapChartHeight = mapHeight - mapMargin.top - mapMargin.bottom;
 
-            let annotations = svg.append("g").attr("id","annotations");
+            let mapAnnotations = productionMap.append("g").attr("id","annotations");
                             
                             
-            let chartArea = svg.append("g").attr("id","points")
-                            .attr("transform",`translate(${margin.left},${margin.top})`);
+            let mapChartArea = productionMap.append("g").attr("id","points")
+                                                        .attr("transform",`translate(${mapMargin.left},${mapMargin.top})`);
 
 
-            let us = await d3.json("state.json");
-
-            const geo = await d3.csv("state_geo.csv");
-            geo.forEach((d,i)=> {
-            d['Latitude'] = Number(d['Latitude']);
-            d['Logitude'] = Number(d['Logitude']);
-            us.forEach((data)=>{
-                if (data.Abb == d.Abb){
-                  data["latitude"] = Number(data['latitude'])
-                  data["longitude"] = Number(d['Logitude'])
-                }
-            })
-            })
-            us = us.filter((data)=>!['AK','HI','CNMI','GU', 'PR','USVI'].includes(data.Abb))
-
-            let category = "Chicken_per"
+            let us = await d3.json("production_state.json");
 
             let foodIdMap = {
                 0:"Chicken_per",
@@ -686,99 +652,79 @@
             }
 
             const latiExtent = d3.extent(us, d => d['latitude']);
-            const latiScale = d3.scaleLinear().domain([25, 55]).range([chartHeight, 0]);
-            //const latiScale = d3.scaleLinear().domain(latiExtent).range([chartHeight, 0]);
+            const latiScale = d3.scaleLinear().domain([25, 55]).range([mapChartHeight, 0]);
             const longiExtent = d3.extent(us, d => d['longitude']);
-            const longiScale = d3.scaleLinear().domain([130,65]).range([0,chartWidth]);
-            //const longiScale = d3.scaleLinear().domain(longiExtent).range([0,chartWidth]);
+            const longiScale = d3.scaleLinear().domain([130,65]).range([0,mapChartWidth]);
 
-            //const chickenExtent = d3.extent(us, d => d[category]);
-            const mapColorScale = d3.scaleSequential([0,100],d3.interpolateBlues);
+            const mapColor = "rgb(247, 160, 10)";
+            const initialDotSize = 5;
+            const dotStepSize = 7;
 
             let bottomAxis = d3.axisBottom(longiScale)
                             //.tickFormat(d3.format(""));  // exact value without commas
             let bottomGridlines = d3.axisBottom(longiScale)
-                                    .tickSize(-chartHeight-10)
+                                    .tickSize(-mapChartHeight-10)
                                     .tickFormat("")
 
-            annotations.append("g")
-            .attr("class", "x gridlines")
-            .attr("transform",`translate(${margin.left},${chartHeight+margin.top+10})`)
-            .call(bottomGridlines);
+            mapAnnotations.append("g")
+                          .attr("class", "x gridlines")
+                          .attr("transform",`translate(${mapMargin.left},${mapChartHeight+mapMargin.top+10})`)
+                          .call(bottomGridlines);
 
             let leftAxis = d3.axisLeft(latiScale)
                             .tickFormat(d3.format(""))  // shorter scientific notation with a dollar sign in front
             let leftGridlines = d3.axisLeft(latiScale)
-                                .tickSize(-chartWidth-10)
+                                .tickSize(-mapChartWidth-10)
                                 .tickFormat("")
 
-            annotations.append("g")
-            .attr("class", "y gridlines")
-            .attr("transform",`translate(${margin.left-10},${margin.top})`)
-            .call(leftGridlines);
+            mapAnnotations.append("g")
+                          .attr("class", "y gridlines")
+                          .attr("transform",`translate(${mapMargin.left-10},${mapMargin.top})`)
+                          .call(leftGridlines);
 
             function updateMap(idList){
                 let idSet = new Set()
-                idList.forEach((e)=>{
-                    idSet.add(e.id)
-                })
-                chartArea.selectAll("circle")
-                .data(us)
-                .join(enter=>{
-                    enter.append("circle").transition()
-                   .attr("cx", d => longiScale(d['longitude']))
-                .attr("cy", d => latiScale(d['latitude']))
-                .attr("r", 20)
-                .attr("fill", d=>{
-                    if(!idSet.length){
-                        return 'white'
-                    }
-                    let sum = 0;
-                    idSet.forEach((id)=>{
-                        sum += d[foodIdMap[Number(id)]]
-                    })
-                    return mapColorScale(sum)
-                })
-                .attr("opacity", "1")
-                .attr("stroke", "black")
-                .attr("stroke-width", 2)},
-                update=>update.transition().attr("fill", d=>{
-                    if(!idList.length){
-                        return 'white'
-                    }
-                    let sum = 0;
-                    idSet.forEach((id)=>{
-                        sum += d[foodIdMap[Number(id)]]
-                    })
-                    return mapColorScale(sum)
-                }).attr("opacity", 1)
-                .attr("r", (d)=>{
-                    d.radius = 20
-                    for(let id of idSet){
-                        let food = foodIdMap[id]
-                        d.radius = d[food] ? d.radius+7 : d.radius
-                    }
-                    return d.radius
-                })
-                )
+                idList.forEach((e)=>{idSet.add(e.id)})
+                mapChartArea.selectAll("circle")
+                        .data(us)
+                        .join(enter=>{
+                            enter.append("circle").attr("opacity", 0)
+                                .attr("cx", d => longiScale(d['longitude']))
+                                .attr("cy", d => latiScale(d['latitude']))
+                                .transition()
+                                .attr("r", initialDotSize)
+                                .attr("fill", mapColor)
+                                .attr("opacity", 0.5)
+                                .attr("stroke", "black")
+                                .attr("stroke-width", 1)},
+                            update=>update.transition().attr("fill", mapColor)
+                                            .attr("r", (d)=>{
+                                                d.radius = initialDotSize
+                                                for(let id of idSet){
+                                                    let food = foodIdMap[id]
+                                                    d.radius = d[food] ? d.radius+dotStepSize : d.radius
+                                                }
+                                                return d.radius
+                                            })
+                            )
 
-                chartArea.selectAll("text")
+                mapChartArea.selectAll("text")
                          .data(us)
                          .join("text")
                          .text(d => d.Abb)
                          .attr("x", d => longiScale(d['longitude']))
-                        .attr("y", d => latiScale(d['latitude']))
-                        .attr("font-size", "10px")
-                        .attr("alignment-baseline", "central")
-                        .attr("text-anchor", "middle");
+                         .attr("y", d => latiScale(d['latitude']))
+                         .attr("font-size", "0px")
+                         .attr("alignment-baseline", "central")
+                         .attr("text-anchor", "middle");
                 
                }
                // initial food map
                updateMap([])
                let btn = document.querySelector(".reset-btn")
                btn.addEventListener("click",function(){
-                    idList = []
-                   updateView(nutritions, idList);
+                   idList = []
+                   updateRadarChart(nutritions, idList);
                    updateMap([])
                    let a = foodIcons.selectAll("image.on-plate")
                                     .transition()
