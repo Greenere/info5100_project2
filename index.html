@@ -317,7 +317,9 @@
                                                         target.attr("active", 0).attr("r", 5).attr("fill", stroke).attr("stroke-width", 0)
                                                         tooltip.attr("opacity", 0)
                                                     })
-                                    dot.attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1]).transition()
+                                    dot.attr("cx", d=>d[0][0]).attr("cy", d=>d[0][1])
+                                       .attr("r", 0)
+                                       .transition()
                                        .attr("r", 5).attr("fill", stroke).attr("opacity", 1)
                                     })
                                         
