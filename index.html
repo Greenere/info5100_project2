@@ -459,24 +459,27 @@
               
               var foods = foodList.slice(0, 12);
               var updateSpare = foodList.slice(10, 12)
-              console.log(foods);
-              const foodListNextIcon = foodCanvas.append("image")
-                                                 .attr("x", 0)
-                                                 .attr("y", foodHeight - foodMenuNextIconHeight + 1)
-                                                 .attr("width", foodWidth)
-                                                 .attr("height", foodMenuNextIconHeight + 2)
-                                                 .style("cursor", "pointer")
-                                                 .on("click", function() {
-                                                   foods.unshift(updateSpare.pop());
-                                                   updateSpare.unshift(foods.pop());
-                                                   foods.forEach((item)=>{
-                                                     if(idSet.has(item)){
-                                                      item.url = ''
-                                                     }
-                                                   })
 
-                                                   updateFoodList(foods);
-                                                 })
+              // Next Icon => click to slow the next list
+
+            //   console.log(foods);
+            //   const foodListNextIcon = foodCanvas.append("image")
+            //                                      .attr("x", 0)
+            //                                      .attr("y", foodHeight - foodMenuNextIconHeight + 1)
+            //                                      .attr("width", foodWidth)
+            //                                      .attr("height", foodMenuNextIconHeight + 2)
+            //                                      .style("cursor", "pointer")
+            //                                      .on("click", function() {
+            //                                        foods.unshift(updateSpare.pop());
+            //                                        updateSpare.unshift(foods.pop());
+            //                                        foods.forEach((item)=>{
+            //                                          if(idSet.has(item)){
+            //                                           item.url = ''
+            //                                          }
+            //                                        })
+
+            //                                        updateFoodList(foods);
+            //                                      })
 
               foodList.sort(function(d1, d2) {
                 return d1["id"] - d2["id"];
@@ -598,11 +601,7 @@
               }
 
               function isInsidethePlate(d) {
-                // console.log(foodWidth + plateMargin.left);
-                // return d.x >= 140 - plateRadius
-                //     && d.x <= 140 + plateRadius
-                //     && d.y >= 250 - plateRadius
-                //     && d.y <= 250 + plateRadius;
+
                 let circleCenterX = foodWidth + plateWidth / 2 - 22;
                 let circleCenterY = plateHeight / 2 - 22;
                 let currentDistancetoCircleCenter = Math.sqrt((d.x - circleCenterX) * (d.x - circleCenterX) 
